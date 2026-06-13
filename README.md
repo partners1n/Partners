@@ -1,150 +1,144 @@
-เทมเพลตแอปพลิเคชันแชท LLM
+PARTNERS Platform
 
-เทมเพลตแอปพลิเคชันแชทที่เรียบง่าย พร้อมปรับใช้งาน ขับเคลื่อนโดย Cloudflare Workers AI เทมเพลตนี้มอบจุดเริ่มต้นที่สะอาดสำหรับการสร้างแอปพลิเคชันแชท AI พร้อมการตอบกลับแบบสตรีมมิ่ง
+โครงสร้างพื้นฐานดิจิทัลสำหรับการเชื่อมโยงธุรกิจ ผู้ประกอบการ องค์กร และ AI เข้าด้วยกันใน Ecosystem เดียว
 
-https://deploy.workers.cloudflare.com/button
+PARTNERS เป็นแพลตฟอร์มที่ออกแบบมาเพื่อสร้างความสัมพันธ์ทางธุรกิจแบบอัจฉริยะ (Business Matching) พร้อมระบบ AI Secretary, Ecosystem Intelligence และ Digital Workspace ที่ช่วยให้การค้นหาโอกาส พาร์ทเนอร์ ลูกค้า และการร่วมทุน (Joint Venture) เกิดขึ้นได้อย่างเป็นระบบ
 
-<!-- dash-content-start -->
+Vision
 
-การสาธิต
+สร้างโครงสร้างพื้นฐานดิจิทัลที่ทำให้ "คน ธุรกิจ และ AI" สามารถทำงานร่วมกันได้อย่างต่อเนื่อง และเติบโตภายใน Ecosystem เดียวกัน
 
-เทมเพลตนี้สาธิตวิธีการสร้างส่วนติดต่อแชทที่ขับเคลื่อนด้วย AI โดยใช้ Cloudflare Workers AI พร้อมการตอบกลับแบบสตรีมมิ่ง โดยมีคุณสมบัติ:
+---
 
-· การสตรีมการตอบกลับ AI แบบเรียลไทม์โดยใช้ Server-Sent Events (SSE)
-· การปรับแต่งโมเดลและ System Prompt ได้อย่างง่ายดาย
-· รองรับการผสานรวม AI Gateway
-· ส่วนติดต่อผู้ใช้ที่สะอาดและตอบสนองได้ดีบนมือถือและเดสก์ท็อป
+Core Features
 
-คุณสมบัติ
+🤝 Intelligent Business Matching
 
-· 💬 ส่วนติดต่อแชทที่เรียบง่ายและตอบสนองได้ดี
-· ⚡ Server-Sent Events (SSE) สำหรับการสตรีมการตอบกลับ
-· 🧠 ขับเคลื่อนโดย Cloudflare Workers AI LLMs
-· 🛠️ สร้างด้วย TypeScript และ Cloudflare Workers
-· 📱 ออกแบบให้เป็นมิตรกับมือถือ
-· 🔄 เก็บบันทึกประวัติแชทบนฝั่งไคลเอนต์
-· 🔎 มีการบันทึก Observability ในตัว
+เชื่อมโยงธุรกิจ บุคคล และองค์กรที่มีศักยภาพในการร่วมงานกัน
 
-<!-- dash-content-end -->
+🧠 AI Secretary
 
-เริ่มต้นใช้งาน
+ผู้ช่วย AI สำหรับจัดการข้อมูล เอกสาร การติดตามงาน และการสื่อสาร
 
-ข้อกำหนดเบื้องต้น
+🌐 Ecosystem Mapping
 
-· Node.js (v18 ขึ้นไป)
-· Wrangler CLI
-· บัญชี Cloudflare ที่สามารถเข้าถึง Workers AI
+วิเคราะห์ความเชื่อมโยงของธุรกิจในระบบนิเวศทางเศรษฐกิจ
 
-การติดตั้ง
+📊 Business Intelligence
 
-1. โคลนที่เก็บนี้:
-   ```bash
-   git clone https://github.com/cloudflare/templates.git
-   cd templates/llm-chat-app
-   ```
-2. ติดตั้งแพ็คเกจที่จำเป็น:
-   ```bash
-   npm install
-   ```
-3. สร้างการกำหนดประเภท Worker:
-   ```bash
-   npm run cf-typegen
-   ```
+แดชบอร์ดสำหรับติดตามข้อมูลและโอกาสทางธุรกิจ
 
-การพัฒนา
+🏢 Organization Workspace
 
-เริ่มเซิร์ฟเวอร์พัฒนาท้องถิ่น:
+พื้นที่ทำงานร่วมกันสำหรับองค์กร ชมรม สมาคม และเครือข่ายธุรกิจ
 
-```bash
-npm run dev
-```
+🔄 Joint Venture Framework
 
-คำสั่งนี้จะเริ่มเซิร์ฟเวอร์ท้องถิ่นที่ http://localhost:8787
+เครื่องมือสนับสนุนการสร้างความร่วมมือและการร่วมลงทุนระหว่างสมาชิก
 
-หมายเหตุ: การใช้ Workers AI เข้าถึงบัญชี Cloudflare ของคุณแม้ในระหว่างการพัฒนาท้องถิ่น ซึ่งจะทำให้เกิดค่าใช้จ่ายในการใช้งาน
+---
 
-การปรับใช้
+Technology Stack
 
-ปรับใช้กับ Cloudflare Workers:
+- Cloudflare Workers
+- Cloudflare AI
+- TypeScript
+- HTML5
+- JavaScript
+- REST API
+- Server-Sent Events (SSE)
+- Cloudflare KV / D1
+- GitHub
 
-```bash
-npm run deploy
-```
+---
 
-การตรวจสอบ
+Platform Architecture
 
-ดูบันทึกตามเวลาจริงที่เกี่ยวข้องกับ Worker ที่ปรับใช้:
+User
+ │
+ ▼
+PARTNERS Platform
+ │
+ ├── AI Secretary
+ ├── Business Matching Engine
+ ├── Ecosystem Intelligence
+ ├── Partner Profiles
+ ├── Organization Management
+ ├── Analytics Dashboard
+ └── Document Center
 
-```bash
-npm wrangler tail
-```
+---
 
-โครงสร้างโปรเจกต์
+Project Structure
 
-```
 /
-├── public/             # ไฟล์สาธารณะ
-│   ├── index.html      # HTML ส่วนติดต่อแชท
-│   └── chat.js         # สคริปต์ฟรอนต์เอนด์ของแชท
+├── public/
+│   ├── index.html
+│   ├── app.js
+│   └── assets/
+│
 ├── src/
-│   ├── index.ts        # จุดเริ่มต้นของ Worker หลัก
-│   └── types.ts        # การกำหนดประเภท TypeScript
-├── test/               # ไฟล์ทดสอบ
-├── wrangler.jsonc      # การกำหนดค่า Cloudflare Worker
-├── tsconfig.json       # การกำหนดค่า TypeScript
-└── README.md           # เอกสารนี้
-```
+│   ├── api/
+│   ├── matching/
+│   ├── ai/
+│   ├── ecosystem/
+│   └── dashboard/
+│
+├── docs/
+├── database/
+├── test/
+├── wrangler.jsonc
+├── package.json
+└── README.md
 
-วิธีการทำงาน
+---
 
-แบ็กเอนด์
+Deployment
 
-แบ็กเอนด์สร้างด้วย Cloudflare Workers และใช้แพลตฟอร์ม Workers AI เพื่อสร้างการตอบกลับ ส่วนประกอบหลักคือ:
+Deploy ผ่าน Cloudflare Workers
 
-1. API Endpoint (/api/chat): รับคำขอ POST พร้อมข้อความแชทและสตรีมการตอบกลับ
-2. การสตรีม: ใช้ Server-Sent Events (SSE) สำหรับการสตรีมการตอบกลับ AI แบบเรียลไทม์
-3. Workers AI Binding: เชื่อมต่อกับบริการ AI ของ Cloudflare ผ่าน Workers AI binding
+npm install
+npm run dev
+npm run deploy
 
-ฟรอนต์เอนด์
+---
 
-ฟรอนต์เอนด์เป็นแอปพลิเคชัน HTML/CSS/JavaScript อย่างง่ายที่:
+Roadmap
 
-1. แสดงส่วนติดต่อแชท
-2. ส่งข้อความจากผู้ใช้ไปยัง API
-3. ประมวลผลการตอบกลับแบบสตรีมตามเวลาจริง
-4. เก็บบันทึกประวัติแชทฝั่งไคลเอนต์
+Phase 1
 
-การปรับแต่ง
+- AI Secretary
+- Partner Profile
+- Basic Matching
 
-การเปลี่ยนโมเดล
+Phase 2
 
-หากต้องการใช้โมเดล AI อื่น ให้อัปเดตค่าคงที่ MODEL_ID ใน src/index.ts คุณสามารถดูโมเดลที่พร้อมใช้งานได้ใน เอกสาร Cloudflare Workers AI
+- Ecosystem Mapping
+- Business Intelligence
+- Organization Dashboard
 
-การใช้ AI Gateway
+Phase 3
 
-เทมเพลตมีโค้ดที่ถูกคอมเมนต์ไว้สำหรับการผสานรวม AI Gateway ซึ่งให้ความสามารถเพิ่มเติม เช่น การจำกัดอัตรา การแคช และการวิเคราะห์
+- Joint Venture Engine
+- Revenue Sharing System
+- Multi-Organization Network
 
-เพื่อเปิดใช้ AI Gateway:
+Phase 4
 
-1. สร้าง AI Gateway ในแดชบอร์ด Cloudflare ของคุณ
-2. ยกเลิกการคอมเมนต์การกำหนดค่าเกตเวย์ใน src/index.ts
-3. แทนที่ YOUR_GATEWAY_ID ด้วย AI Gateway ID จริงของคุณ
-4. กำหนดค่าตัวเลือกเกตเวย์อื่น ๆ ตามต้องการ:
-   · skipCache: ตั้งเป็น true เพื่อข้ามการแคชของเกตเวย์
-   · cacheTtl: ตั้งค่า time-to-live ของแคชเป็นวินาที
+- Autonomous AI Business Assistant
+- Ecosystem Scoring
+- Predictive Opportunity Discovery
 
-เรียนรู้เพิ่มเติมเกี่ยวกับ AI Gateway
+---
 
-การแก้ไข System Prompt
+Mission
 
-สามารถเปลี่ยน System Prompt เริ่มต้นได้โดยอัปเดตค่าคงที่ SYSTEM_PROMPT ใน src/index.ts
+PARTNERS ไม่ใช่เพียงแอปพลิเคชันแชท AI
 
-การปรับแต่งสไตล์
+แต่เป็นโครงสร้างพื้นฐานสำหรับการสร้างความสัมพันธ์ ความร่วมมือ และการเติบโตทางธุรกิจในยุค AI
 
-สไตล์ UI อยู่ในส่วน <style> ของ public/index.html คุณสามารถแก้ไขตัวแปร CSS ด้านบนเพื่อเปลี่ยนชุดสีได้อย่างรวดเร็ว
+---
 
-แหล่งข้อมูล
+© 2026 PARTNERS Platform
 
-· เอกสาร Cloudflare Workers
-· เอกสาร Cloudflare Workers AI
-· โมเดล Workers AI
+All Rights Reserved.
