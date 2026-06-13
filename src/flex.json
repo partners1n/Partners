@@ -1,0 +1,89 @@
+{
+  "bubbleTemplate": {
+    "type": "bubble",
+    "header": {
+      "type": "box", "layout": "vertical", "backgroundColor": "{color}",
+      "contents": [{ "type": "text", "text": "{name}", "weight": "bold", "size": "xl", "color": "#ffffff" }]
+    },
+    "body": {
+      "type": "box", "layout": "vertical",
+      "contents": [
+        { "type": "text", "text": "ข้อมูลพื้นฐาน", "weight": "bold", "size": "sm" },
+        { "type": "text", "text": "{desc}", "wrap": true, "size": "sm", "color": "#666666" }
+      ]
+    },
+    "footer": {
+      "type": "box", "layout": "vertical",
+      "contents": [
+        { 
+          "type": "button", 
+          "action": { 
+            "type": "uri", 
+            "label": "เปิดดูข้อมูล", 
+            "uri": "{link}" 
+          }, 
+          "style": "primary", 
+          "color": "#1e40af" 
+        }
+      ]
+    }
+  },
+  "slipTemplate": {
+    "type": "bubble",
+    "size": "mega",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "paddingAll": "8%",
+      "contents": [
+        { "type": "text", "text": "PAYMENT VERIFIED", "color": "#10b981", "size": "xs", "weight": "bold" },
+        { "type": "text", "text": "ตรวจสอบสลิปโอนเงิน", "weight": "bold", "size": "xl", "margin": "sm", "color": "#111827" },
+        { "type": "separator", "margin": "xl", "color": "#e5e7eb" },
+        {
+          "type": "box", "layout": "vertical", "margin": "xl", "spacing": "sm",
+          "contents": [
+            { "type": "box", "layout": "horizontal", "contents": [ { "type": "text", "text": "วันที่ทำรายการ", "size": "sm", "color": "#6b7280" }, { "type": "text", "text": "{datetime}", "size": "sm", "color": "#111827", "align": "end", "weight": "bold" } ] },
+            { "type": "box", "layout": "horizontal", "contents": [ { "type": "text", "text": "เลขที่รายการ", "size": "sm", "color": "#6b7280" }, { "type": "text", "text": "{ref}", "size": "sm", "color": "#111827", "align": "end", "weight": "bold" } ] }
+          ]
+        },
+        { "type": "separator", "margin": "xl", "color": "#e5e7eb" },
+        {
+          "type": "box", "layout": "vertical", "margin": "xl", "spacing": "md",
+          "contents": [
+            { "type": "box", "layout": "vertical", "spacing": "xs", "contents": [ { "type": "text", "text": "ผู้โอน", "size": "sm", "color": "#3b82f6", "weight": "bold" }, { "type": "text", "text": "{sender}", "size": "md", "color": "#111827", "weight": "bold" }, { "type": "text", "text": "ธนาคาร: {bankSender}", "size": "sm", "color": "#6b7280" }, { "type": "text", "text": "เลขที่บัญชี: {accountSender}", "size": "sm", "color": "#6b7280" } ] },
+            { "type": "box", "layout": "vertical", "spacing": "xs", "margin": "lg", "contents": [ { "type": "text", "text": "ผู้รับ", "size": "sm", "color": "#10b981", "weight": "bold" }, { "type": "text", "text": "{receiver}", "size": "md", "color": "#111827", "weight": "bold" }, { "type": "text", "text": "ธนาคาร: {bankReceiver}", "size": "sm", "color": "#6b7280" }, { "type": "text", "text": "เลขที่บัญชี: {accountReceiver}", "size": "sm", "color": "#6b7280" } ] }
+          ]
+        },
+        { "type": "separator", "margin": "xl", "color": "#e5e7eb" },
+        {
+          "type": "box", "layout": "vertical", "margin": "xl",
+          "contents": [ { "type": "box", "layout": "horizontal", "contents": [ { "type": "text", "text": "จำนวนเงิน", "size": "md", "color": "#6b7280", "gravity": "center" }, { "type": "text", "text": "{amount} บาท", "size": "xl", "color": "#ef4444", "weight": "bold", "align": "end" } ] } ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "box", "layout": "horizontal", "spacing": "sm",
+      "contents": [
+        { "type": "button", "style": "primary", "color": "#1e40af", "action": { "type": "message", "label": "บันทึก", "text": "บันทึกสลิป" } },
+        { "type": "button", "style": "secondary", "action": { "type": "message", "label": "ดูเอกสาร", "text": "ดูเอกสาร" } }
+      ]
+    }
+  },
+  "cctvAlertTemplate": {
+    "type": "bubble",
+    "header": { "type": "box", "layout": "vertical", "backgroundColor": "#ef4444", "contents": [ { "type": "text", "text": "⚠️ แจ้งเตือนความปลอดภัย", "weight": "bold", "color": "#ffffff", "size": "xl" } ] },
+    "body": {
+      "type": "box", "layout": "vertical",
+      "contents": [
+        { "type": "text", "text": "ระบบ XVR ตรวจพบความผิดปกติ", "wrap": true, "weight": "bold", "size": "md", "color": "#111827" },
+        { "type": "separator", "margin": "lg", "color": "#e5e7eb" },
+        { "type": "box", "layout": "vertical", "margin": "lg", "spacing": "sm", "contents": [
+            { "type": "box", "layout": "horizontal", "contents": [ { "type": "text", "text": "เหตุการณ์:", "size": "sm", "color": "#6b7280", "flex": 1 }, { "type": "text", "text": "{subject}", "size": "sm", "color": "#ef4444", "flex": 3, "wrap": true, "weight": "bold" } ] },
+            { "type": "box", "layout": "horizontal", "contents": [ { "type": "text", "text": "ผู้ส่ง:", "size": "sm", "color": "#6b7280", "flex": 1 }, { "type": "text", "text": "{sender}", "size": "sm", "color": "#111827", "flex": 3, "wrap": true } ] },
+            { "type": "box", "layout": "horizontal", "contents": [ { "type": "text", "text": "ข้อมูล:", "size": "sm", "color": "#6b7280", "flex": 1 }, { "type": "text", "text": "{message}", "size": "xs", "color": "#111827", "flex": 3, "wrap": true } ] }
+          ]
+        }
+      ]
+    }
+  }
+}
