@@ -1,0 +1,32 @@
+[
+    { 
+        "id": "kbank", 
+        "name": "KBank", 
+        "thName": "กสิกรไทย", 
+        "abbr": "KBank", 
+        "rate": 0, 
+        "mrr": 0, 
+        "highlight": "0% 10 เดือน", 
+        "bgGradient": "from-green-50/80 to-white dark:from-green-900/20 dark:to-[#0f172a]" 
+    },
+    { 
+        "id": "ktc", 
+        "name": "KTC", 
+        "thName": "เคทีซี", 
+        "abbr": "KTC", 
+        "rate": 0.74, 
+        "mrr": 0, 
+        "highlight": "ดอกเบี้ยพิเศษ", 
+        "bgGradient": "from-blue-50/80 to-white dark:from-blue-900/20 dark:to-[#0f172a]" 
+    },
+    { 
+        "id": "scb", 
+        "name": "SCB", 
+        "thName": "ไทยพาณิชย์", 
+        "abbr": "SCB", 
+        "rate": 0, 
+        "mrr": 0, 
+        "highlight": "0% 6 เดือน", 
+        "bgGradient": "from-purple-50/80 to-white dark:from-purple-900/20 dark:to-[#0f172a]" 
+    }
+]

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AI Investment Analysis | Partners</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #db2777;
+            --bg: #f9fafb;
+        }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 450px;
+            padding: 2.5rem 1.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .progress-container { margin-bottom: 2rem; }
+        .progress-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        #progress { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 25%; transition: 0.4s ease; }
+        
+        .step { display: none; animation: slideIn 0.4s ease-out; }
+        .step.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        h2 { color: #111827; font-size: 1.5rem; margin-bottom: 1rem; }
+        p { color: #6b7280; font-size: 0.95rem; margin-bottom: 1.5rem; }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 2px solid #f3f4f6;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            box-sizing: border-box; /* ป้องกัน input ล้นขอบ */
+        }
+        input:focus { border-color: var(--primary); background: #eff6ff; }
+        
+        .btn-main {
+            background: var(--primary); color: white; border: none;
+            padding: 14px; border-radius: 12px; cursor: pointer;
+            font-weight: 600; width: 100%; font-size: 16px; margin-top: 1rem;
+            transition: 0.2s;
+        }
+        .btn-main:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: none; color: #9ca3af; border: none;
+            padding: 8px; cursor: pointer; font-size: 14px; margin-top: 0.5rem;
+        }
+        
+        .success-checkmark {
+            display: none;
+            color: #10b981;
+            margin-bottom: 1rem;
+            animation: slideIn 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-container">
+        <div class="progress-bar"><div id="progress"></div></div>
+    </div>
+    
+    <form id="talkForm">
+        <div class="step active" id="step1">
+            <i class="fas fa-hand-sparkles fa-3x" style="color: #fbbf24; margin-bottom: 1rem;"></i>
+            <h2>ยินดีต้อนรับครับ</h2>
+            <p>เรามาเริ่มวางแผนการลงทุนกัน<br>ขอทราบชื่อของคุณก่อนครับ?</p>
+            <input type="text" id="name" placeholder="ระบุชื่อของคุณ" required>
+            <button type="button" class="btn-main" onclick="goStep(2)">เริ่มเลย</button>
+        </div>
+
+        <div class="step" id="step2">
+            <h2>เป้าหมายของคุณ?</h2>
+            <p>คุณต้องการลงทุนในลักษณะใด</p>
+            <select id="goal">
+                <option value="เน้นเก็งกำไรระยะสั้น (Day Trade)">Day Trade (กำไรรายวัน)</option>
+                <option value="ถือครองระยะกลาง (Swing Trade)">Swing Trade (ถือรายสัปดาห์)</option>
+                <option value="ออมระยะยาว (HODL)">HODL (ถือยาวเพื่ออนาคต)</option>
+            </select>
+            <button type="button" class="btn-main" onclick="goStep(3)">ถัดไป</button>
+            <button type="button" class="btn-secondary" onclick="goStep(1)">ย้อนกลับ</button>
+        </div>
+
+        <div class="step" id="step3">
+            <h2>งบประมาณเริ่มต้น?</h2>
+            <p>คุณมีงบที่ต้องการให้ AI ช่วยบริหารเท่าไหร่ (บาท)</p>
+            <input type="number" id="budget" placeholder="เช่น 10000" required>
+            <button type="button" class="btn-main" onclick="goStep(4)">สุดท้ายแล้ว</button>
+            <button type="button" class="btn-secondary" onclick="goStep(2)">ย้อนกลับ</button>
+        </div>
+
+        <div class="step" id="step4">
+            <i id="bot-icon" class="fas fa-robot fa-4x" style="color: var(--primary); margin-bottom: 1rem;"></i>
+            <i id="success-icon" class="fas fa-check-circle fa-4x success-checkmark"></i>
+            <h2 id="final-title">พร้อมวิเคราะห์ข้อมูล</h2>
+            <p id="final-desc">เมื่อกดปุ่ม ข้อมูลจะถูกส่งให้ AI <br>วิเคราะห์และตอบกลับในห้องแชททันที</p>
+            <button type="submit" class="btn-main" id="btnSubmit">ส่งข้อมูลให้ AI คำนวณ</button>
+            <button type="button" class="btn-secondary" id="btnEdit" onclick="goStep(3)">แก้ไขข้อมูล</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // --- Initialize LIFF ---
+    async function initLiff() {
+        try {
+            await liff.init({ liffId: "1654427780-01AJrXX2" });
+            if (!liff.isLoggedIn()) {
+                liff.login();
+            }
+        } catch (err) {
+            console.error("LIFF Init Error", err);
+        }
+    }
+    initLiff();
+
+    function goStep(s) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.getElementById('step' + s).classList.add('active');
+        document.getElementById('progress').style.width = (s * 25) + '%';
+    }
+
+    document.getElementById('talkForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // UI Loading State
+        const btn = document.getElementById('btnSubmit');
+        const btnEdit = document.getElementById('btnEdit');
+        btn.disabled = true;
+        btn.innerText = "กำลังประมวลผล...";
+        btnEdit.style.display = 'none';
+
+        // Get Data
+        const data = {
+            name: document.getElementById('name').value,
+            goal: document.getElementById('goal').value,
+            budget: document.getElementById('budget').value
+        };
+
+        // ปรับแต่ง Prompt ให้ AI ทำการคำนวณและแจกแจงพอร์ตอย่างละเอียด
+        const message = `[FORM_DATA]
+โปรดวิเคราะห์และจัดพอร์ตการลงทุนให้ฉัน:
+ชื่อ: คุณ ${data.name}
+สไตล์การลงทุน: ${data.goal}
+งบประมาณ: ${data.budget} บาท
+คำสั่ง: ช่วยคำนวณสัดส่วนการลงทุน (Portfolio Allocation) เป็นเปอร์เซ็นต์และระบุเป็นจำนวนเงินบาทให้ชัดเจน พร้อมให้คำแนะนำสั้นๆ ที่เหมาะสมกับสไตล์การลงทุนนี้ครับ`;
+
+        if (liff.isInClient()) {
+            liff.sendMessages([{ type: 'text', text: message }])
+                .then(() => {
+                    // Update UI success before closing
+                    document.getElementById('bot-icon').style.display = 'none';
+                    document.getElementById('success-icon').style.display = 'inline-block';
+                    document.getElementById('final-title').innerText = "ส่งข้อมูลสำเร็จ!";
+                    document.getElementById('final-title').style.color = "#10b981";
+                    document.getElementById('final-desc').innerText = "กรุณารอสักครู่ AI กำลังส่งผลวิเคราะห์\nกลับไปที่หน้าแชทของคุณครับ";
+                    btn.style.display = 'none';
+                    
+                    // Delay slightly before closing so user sees the success state
+                    setTimeout(() => {
+                        liff.closeWindow();
+                    }, 1500);
+                })
+                .catch(err => {
+                    alert("เกิดข้อผิดพลาดในการส่งข้อมูล: " + err);
+                    btn.disabled = false;
+                    btn.innerText = "ลองใหม่อีกครั้ง";
+                    btnEdit.style.display = 'inline-block';
+                });
+        } else {
+            // กรณีเปิดใน Browser ปกติ (ไม่ใช่ในแอป LINE)
+            alert("กรุณาเปิดในแอป LINE เพื่อส่งข้อมูลครับ\n\nข้อมูลที่จะถูกส่งไปให้ AI:\n\n" + message);
+            btn.disabled = false;
+            btn.innerText = "ส่งข้อมูลให้ AI คำนวณ";
+            btnEdit.style.display = 'inline-block';
+        }
+    });
+</script>
+</body>
+</html>

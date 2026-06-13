@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>ฟรายเดย์ AI - ผู้ช่วยคำสั่งเสียงอัจฉริยะ</title>
+    <meta name="description" content="พูดคุยโต้ตอบด้วยเสียงภาษาไทยกับ 'ฟรายเดย์ AI' ผู้ช่วยอัจฉริยะที่มาพร้อมกับสมการคลื่นฟิสิกส์ขั้นสูง ใช้งานง่ายและสามารถติดตั้งลงเครื่องได้" />
+    <meta name="keywords" content="AI, Voice Assistant, ผู้ช่วยเสียง, Gemini, สั่งงานด้วยเสียง, ฟรายเดย์, ปัญญาประดิษฐ์, ภาษาไทย" />
+    <meta name="author" content="DataGu / Farday Team" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="ฟรายเดย์ AI - ผู้ช่วยคำสั่งเสียงอัจฉริยะ" />
+    <meta property="og:description" content="พูดคุยโต้ตอบด้วยเสียงภาษาไทย กับ AI อัจฉริยะ 'ฟรายเดย์'" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Farday AI" />
+    <meta property="og:locale" content="th_TH" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Farday AI" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2300b894'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white' font-family='monospace'%3EF%3C/text%3E%3C/svg%3E" />
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: #00b894;
+    --secondary-color: #6c5ce7;
+    --bg-color: #ffffff;
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    
+    --spring-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --fluid-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Prompt', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body, html {
+    width: 100%; height: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow: hidden; 
+    overscroll-behavior: none; 
+}
+
+#app-root {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#physics-canvas {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    transform: translateZ(0);
+    pointer-events: none;
+}
+
+.ui-layer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 2rem 1.5rem;
+    background: radial-gradient(circle at center, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 100%);
+}
+
+header {
+    text-align: center; margin-bottom: 2rem;
+    animation: fadeDown 0.8s var(--fluid-easing) forwards;
+}
+
+.gradient-text {
+    font-size: 1.8rem; font-weight: 600;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px; margin-bottom: 0.5rem;
+}
+
+#system-status { font-size: 0.9rem; color: var(--text-muted); font-weight: 300; }
+
+.chat-container {
+    flex: 1; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 1rem;
+    padding-bottom: 2rem;
+    -ms-overflow-style: none; scrollbar-width: none;
+}
+.chat-container::-webkit-scrollbar { display: none; }
+
+.message {
+    display: flex; align-items: flex-end; margin-bottom: 1rem; max-width: 85%;
+    animation: popIn 0.5s var(--spring-easing) forwards;
+}
+.user-message { align-self: flex-end; flex-direction: row-reverse; margin-left: auto; }
+.assistant-message, .system-message { align-self: flex-start; margin-right: auto; }
+
+.avatar { display: none; }
+
+.message-bubble {
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    line-height: 1.5; font-size: 0.95rem;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.system-message .message-bubble, .assistant-message .message-bubble {
+    background: #f8f9fa;
+    color: var(--text-main);
+    border-bottom-left-radius: 4px;
+}
+
+.user-message .message-bubble {
+    background: #e6fffa;
+    border-color: #b2f5ea;
+    color: #005f4f;
+    border-bottom-right-radius: 4px;
+    transform-origin: bottom right;
+}
+
+.control-panel {
+    display: flex; justify-content: center; align-items: center; padding-top: 1rem;
+}
+
+.cyber-button {
+    position: relative;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffffff, #f1f2f6);
+    border: 2px solid #dfe4ea;
+    color: #747d8c;
+    cursor: pointer;
+    display: flex; justify-content: center; align-items: center;
+    outline: none;
+    transition: transform 0.3s var(--spring-easing), box-shadow 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.cyber-button:hover { transform: scale(1.05); }
+.cyber-button:active { transform: scale(0.95); transition: transform 0.1s; }
+
+.mic-icon { width: 28px; height: 28px; z-index: 2; transition: color 0.3s ease; }
+
+.cyber-button.listening {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 25px rgba(0, 184, 148, 0.4); 
+}
+
+.cyber-button.listening .mic-icon { color: var(--primary-color); }
+
+.btn-glow {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: var(--primary-color);
+    opacity: 0; z-index: 1; pointer-events: none;
+}
+
+.cyber-button.listening .btn-glow { animation: pulseWave 1.5s infinite ease-out; }
+
+.install-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999; opacity: 1; transition: opacity 0.3s ease;
+}
+.install-modal.hidden { opacity: 0; pointer-events: none; }
+.install-card {
+    background: #ffffff; border: 1px solid #dfe4ea; border-radius: 20px;
+    padding: 2rem; max-width: 90%; width: 350px; text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(0) scale(1); transition: transform 0.4s var(--spring-easing);
+}
+.install-modal.hidden .install-card { transform: translateY(20px) scale(0.9); }
+.install-card h2 { color: var(--primary-color); margin-bottom: 1rem; font-size: 1.4rem; }
+.install-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5; }
+.install-actions { display: flex; flex-direction: column; gap: 0.8rem; }
+.install-actions button {
+    padding: 12px; border-radius: 12px; border: none;
+    font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.2s ease;
+}
+.btn-primary { background: linear-gradient(135deg, var(--primary-color), #00cec9); color: #fff; }
+.btn-primary:active { transform: scale(0.95); }
+.btn-secondary { background: #f1f2f6; color: var(--text-muted); }
+
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes pulseWave { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+
+@media (min-width: 768px) {
+    .ui-layer { max-width: 600px; margin: 0 auto; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); background: rgba(255,255,255,0.9); }
+}
+    </style>
+</head>
+<body>
+<div id="app-root">
+    <canvas id="physics-canvas"></canvas>
+    <div class="ui-layer">
+        <header>
+            <p id="system-status">ระบบปิดอยู่ • กดปุ่มเพื่อเปิดไมค์</p>
+        </header>
+        
+        <div class="chat-container" id="chat-messages">
+            <div class="message system-message">
+                <div class="message-bubble">สวัสดี! เราฟรายเดย์เอง กดปุ่มไมค์ด้านล่างเพื่อเปิดระบบนะ</div>
+            </div>
+        </div>
+
+        <div style="display: none;">
+            <input type="text" id="user-input" />
+            <button id="send-button"></button>
+            <div id="typing-indicator"></div>
+        </div>
+
+        <div class="control-panel">
+            <button id="voice-btn" class="cyber-button" aria-label="เปิด/ปิดไมโครโฟน">
+                <div class="btn-glow"></div>
+                <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div id="install-popup" class="install-modal hidden">
+        <div class="install-card">
+            <h2>📲 ติดตั้งแอปลงเครื่อง</h2>
+            <p>ต้องการติดตั้ง "ฟรายเดย์" ลงในหน้าจอโฮมเพื่อใช้งานเหมือนแอปพลิเคชันทั่วไปหรือไม่?</p>
+            <div class="install-actions">
+                <button id="confirm-install-btn" class="btn-primary">ติดตั้งลงเครื่อง</button>
+                <button id="cancel-install-btn" class="btn-secondary">ไว้ทีหลัง</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+});
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.error(err));
+    });
+}
+
+const installPopup = document.getElementById('install-popup');
+const btnConfirmInstall = document.getElementById('confirm-install-btn');
+const btnCancelInstall = document.getElementById('cancel-install-btn');
+
+function showInstallModal() { installPopup.classList.remove('hidden'); }
+function hideInstallModal() { installPopup.classList.add('hidden'); }
+
+if(btnCancelInstall) btnCancelInstall.addEventListener('click', hideInstallModal);
+if(btnConfirmInstall) {
+    btnConfirmInstall.addEventListener('click', async () => {
+        hideInstallModal();
+        if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+        } else {
+            alert('ไม่สามารถติดตั้งได้ในขณะนี้ครับ');
+        }
+    });
+}
+
+class PhysicsWaveEngine {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d', { alpha: false });
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.time = 0;
+        this.intensity = 0.5;
+        this.targetIntensity = 0.5;
+        
+        this.waves = [
+            { amplitude: 40, frequency: 0.01, speed: 0.02, phase: 0 },
+            { amplitude: 25, frequency: 0.02, speed: 0.03, phase: Math.PI / 4 },
+            { amplitude: 15, frequency: 0.03, speed: 0.04, phase: Math.PI / 2 }
+        ];
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.animate();
+    }
+
+    resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+    }
+
+    setListeningState(state) {
+        if (state === 'active') this.targetIntensity = 2.5;
+        else if (state === 'processing') this.targetIntensity = 4.0;
+        else this.targetIntensity = 0.5;
+    }
+
+    animate() {
+        this.intensity += (this.targetIntensity - this.intensity) * 0.05;
+        
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.lineWidth = 2;
+        this.ctx.lineJoin = 'round';
+
+        const centerY = this.height / 2;
+
+        for (let j = 0; j < 3; j++) {
+            this.ctx.beginPath();
+            this.ctx.strokeStyle = j === 0 ? 'rgba(0, 184, 148, 0.5)' : 
+                                   j === 1 ? 'rgba(108, 92, 231, 0.4)' : 
+                                             'rgba(0, 206, 201, 0.5)';
+
+            for (let i = 0; i <= this.width; i += 5) {
+                let y = centerY;
+                for (let w = 0; w < this.waves.length; w++) {
+                    const wave = this.waves[w];
+                    y += Math.sin((i * wave.frequency) + this.time * wave.speed + wave.phase + (j * 0.5)) 
+                         * wave.amplitude * this.intensity;
+                }
+                if (i === 0) this.ctx.moveTo(i, y);
+                else this.ctx.lineTo(i, y);
+            }
+            this.ctx.stroke();
+        }
+
+        this.time += 1;
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+class VoiceAssistant {
+    constructor(physicsEngine) {
+        this.physicsEngine = physicsEngine;
+        
+        this.btn = document.getElementById('voice-btn');
+        this.chatContainer = document.getElementById('chat-messages');
+        this.statusText = document.getElementById('system-status');
+        
+        this.isSystemEnabled = false; 
+        this.isSpeaking = false;      
+        this.state = 'WAITING_WAKE_WORD'; 
+        
+        this.timer20 = null;
+        this.timer40 = null;
+        this.timer60 = null;        
+
+        if (window.speechSynthesis) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        this.initSpeechRecognition();
+        this.setupEventListeners();
+        this.setupChatJsObserver();
+    }
+
+    setupChatJsObserver() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (!typingIndicator) return;
+        
+        let wasVisible = false;
+
+        const observer = new MutationObserver(() => {
+            const isVisible = typingIndicator.classList.contains('visible') || typingIndicator.style.display === 'flex';
+            
+            if (isVisible && !wasVisible) {
+                wasVisible = true;
+                this.physicsEngine.setListeningState('processing');
+                this.statusText.textContent = "ฟรายเดย์กำลังคิด...";
+            } else if (!isVisible && wasVisible) {
+                wasVisible = false;
+                this.handleBotReplyComplete();
+            }
+        });
+        
+        observer.observe(typingIndicator, { attributes: true, attributeFilter: ['class', 'style'] });
+    }
+
+    handleBotReplyComplete() {
+        this.physicsEngine.setListeningState('active');
+        this.statusText.textContent = "กำลังฟัง...";
+        this.startIdleTimers();
+
+        const botMessages = this.chatContainer.querySelectorAll('.assistant-message .message-bubble');
+        if (botMessages.length > 0) {
+            const lastMessage = botMessages[botMessages.length - 1].innerText;
+            this.speakText(lastMessage);
+        }
+    }
+
+    initSpeechRecognition() {
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!window.SpeechRecognition) return;
+
+        this.recognition = new SpeechRecognition();
+        this.recognition.lang = 'th-TH';
+        this.recognition.interimResults = false;
+        this.recognition.continuous = false; 
+
+        this.recognition.onstart = () => {
+            if (this.isSystemEnabled) {
+                this.btn.classList.add('listening');
+            }
+        };
+
+        this.recognition.onresult = async (event) => {
+            if (this.isSpeaking) return; 
+
+            const transcript = event.results[0][0].transcript.trim();
+
+            if (this.state === 'WAITING_WAKE_WORD') {
+                const wakeWords = ['หวัดดี', 'สวัสดี', 'ไง', 'hello', 'ฮัลโหล', 'ฟรายเด', 'เลขา', 'ฟายเด'];
+                if (wakeWords.some(word => transcript.includes(word))) {
+                    this.activateConversation();
+                }
+            } else if (this.state === 'ACTIVE_CONVERSATION') {
+                this.clearIdleTimers(); 
+
+                if (transcript.includes('ติดตั้ง')) {
+                    this.addMessage(transcript, 'user');
+                    const reply = "ได้เลยค่ะ เดี๋ยวฟรายเดย์เปิดหน้าต่างติดตั้งให้นะ";
+                    this.addMessage(reply, 'system');
+                    this.speakText(reply);
+                    showInstallModal(); 
+                    this.startIdleTimers();
+                    return; 
+                }
+
+                this.submitToChatJs(transcript);
+            }
+        };
+
+        this.recognition.onerror = (e) => { if (e.error !== 'no-speech') console.warn(e.error); };
+        this.recognition.onend = () => {
+            if (this.isSystemEnabled && !this.isSpeaking) {
+                setTimeout(() => { try { this.recognition.start(); } catch(e) {} }, 300);
+            }
+        };
+    }
+
+    submitToChatJs(text) {
+        const input = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-button');
+        if (input && sendBtn) {
+            input.value = text;
+            sendBtn.click();
+        }
+    }
+
+    activateConversation() {
+        this.state = 'ACTIVE_CONVERSATION';
+        this.statusText.textContent = "เชื่อมต่อกับฟรายเดย์แล้ว • พูดต่อได้เลย";
+        this.physicsEngine.setListeningState('active');
+        
+        const welcomeText = "ว่าไง มีอะไรให้ช่วย";
+        this.addMessage(welcomeText, 'system');
+        this.speakText(welcomeText);
+        
+        this.startIdleTimers();
+    }
+
+    startIdleTimers() {
+        this.clearIdleTimers();
+        
+        this.timer20 = setTimeout(() => {
+            if (this.state === 'ACTIVE_CONVERSATION') {
+                const msg = "มีอะไรก็พูดๆมา";
+                this.addMessage(msg, 'system');
+                this.speakText(msg);
+            }
+        }, 20000);
+
+        this.timer40 = setTimeout(() => {
+            if (this.state === 'ACTIVE_CONVERSATION') {
+                const msg = "งั้นจะไปนอนละนะ";
+                this.addMessage(msg, 'system');
+                this.speakText(msg);
+            }
+        }, 40000);
+
+        this.timer60 = setTimeout(() => {
+            if (this.state === 'ACTIVE_CONVERSATION') {
+                const msg = "ถ้ามีอะไรให้ช่วยทักมาใหม่นะแล้ว..ไปละบัย !";
+                this.addMessage(msg, 'system');
+                this.speakText(msg);
+                
+                this.state = 'WAITING_WAKE_WORD';
+                this.statusText.textContent = "เปิดไมค์ทิ้งไว้ • พูด 'ฟรายเดย์' เพื่อเรียก";
+                this.physicsEngine.setListeningState('idle');
+
+                setTimeout(() => {
+                    this.chatContainer.innerHTML = ''; 
+                    this.addMessage('รีเซ็ตระบบเรียบร้อย... พร้อมรับคำสั่งใหม่', 'system');
+                }, 4000);
+            }
+        }, 60000); 
+    }
+
+    clearIdleTimers() {
+        if (this.timer20) clearTimeout(this.timer20);
+        if (this.timer40) clearTimeout(this.timer40);
+        if (this.timer60) clearTimeout(this.timer60);
+    }
+
+    speakText(text) {
+        if (!window.speechSynthesis) return;
+        this.isSpeaking = true;
+        if (this.recognition) this.recognition.stop(); 
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'th-TH';
+        utterance.rate = 1.0; 
+        utterance.pitch = 1.0; 
+
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            const thaiVoice = voices.find(v => v.lang.toLowerCase().indexOf('th') !== -1);
+            if (thaiVoice) {
+                utterance.voice = thaiVoice;
+            }
+        }
+
+        utterance.onend = () => {
+            this.isSpeaking = false;
+            if (this.isSystemEnabled && this.recognition) { 
+                try { this.recognition.start(); } catch(e) {} 
+            }
+        };
+
+        utterance.onerror = () => {
+            this.isSpeaking = false;
+            if (this.isSystemEnabled && this.recognition) { 
+                try { this.recognition.start(); } catch(e) {} 
+            }
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    requestFullScreen() {
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) docEl.requestFullscreen().catch(e => console.warn(e));
+        else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch(e => console.warn(e)); 
+    }
+
+    setupEventListeners() {
+        this.btn.addEventListener('click', () => {
+            if (!this.isSystemEnabled) {
+                this.requestFullScreen();
+
+                this.isSystemEnabled = true;
+                this.statusText.textContent = "เปิดไมค์ทิ้งไว้ • พูดคำว่า 'ไง' เพื่อเรียกฟรายเดย์";
+                this.btn.classList.add('listening'); 
+                
+                try { this.recognition.start(); } catch(e) {}
+                if (window.speechSynthesis) window.speechSynthesis.getVoices();
+            } else {
+                this.isSystemEnabled = false;
+                this.state = 'WAITING_WAKE_WORD';
+                this.clearIdleTimers();
+                if (this.recognition) this.recognition.stop();
+                this.btn.classList.remove('listening');
+                this.statusText.textContent = "ระบบปิดอยู่ • กดปุ่มเพื่อเปิดไมค์";
+                this.physicsEngine.setListeningState('idle');
+                
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                }
+            }
+        });
+    }
+
+    addMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}-message`;
+        msgDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
+        this.chatContainer.appendChild(msgDiv);
+        this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const physics = new PhysicsWaveEngine('physics-canvas');
+    const ai = new VoiceAssistant(physics);
+});
+</script>
+
+<script src="chat.js"></script>
+</body>
+</html>

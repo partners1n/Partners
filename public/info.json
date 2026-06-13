@@ -1,0 +1,1092 @@
+{
+  "contracts": {
+    "sale": {
+      "title": "สัญญาซื้อขาย",
+      "desc": "สัญญาสำหรับการซื้อขายสินค้าหรือทรัพย์สิน ระบุรายละเอียดสินค้า ราคา และเงื่อนไขการชำระเงิน",
+      "icon": "fa-handshake",
+      "fields": [
+        {
+          "id": "product_name",
+          "label": "ชื่อสินค้า/ทรัพย์สิน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "sale_price",
+          "label": "ราคาขาย:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "payment_terms",
+          "label": "เงื่อนไขการชำระเงิน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "delivery_terms",
+          "label": "เงื่อนไขการส่งมอบ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "lease": {
+      "title": "สัญญาเช่า",
+      "desc": "สัญญาสำหรับการเช่าอสังหาริมทรัพย์ ระบุค่าเช่า ระยะเวลา และเงื่อนไขต่างๆ",
+      "icon": "fa-home",
+      "fields": [
+        {
+          "id": "property_address",
+          "label": "ที่อยู่ทรัพย์สิน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "rental_amount",
+          "label": "ค่าเช่าต่อเดือน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "lease_period",
+          "label": "ระยะเวลาเช่า:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "deposit_amount",
+          "label": "เงินประกัน:",
+          "type": "number",
+          "required": false
+        },
+        {
+          "id": "additional_terms",
+          "label": "เงื่อนไขเพิ่มเติม:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "employment": {
+      "title": "สัญญาจ้างงาน",
+      "desc": "สัญญาสำหรับการจ้างพนักงาน ระบุตำแหน่ง เงินเดือน และสวัสดิการ",
+      "icon": "fa-briefcase",
+      "fields": [
+        {
+          "id": "position",
+          "label": "ตำแหน่งงาน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "salary",
+          "label": "เงินเดือน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "work_schedule",
+          "label": "เวลาทำงาน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "start_date",
+          "label": "วันที่เริ่มงาน:",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "benefits",
+          "label": "สวัสดิการ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "service": {
+      "title": "สัญญาบริการ",
+      "desc": "สัญญาสำหรับการให้บริการ ระบุรายละเอียดบริการ ค่าบริการ และระยะเวลา",
+      "icon": "fa-cogs",
+      "fields": [
+        {
+          "id": "service_type",
+          "label": "ประเภทบริการ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "service_fee",
+          "label": "ค่าบริการ:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "service_period",
+          "label": "ระยะเวลาบริการ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "service_scope",
+          "label": "ขอบเขตการบริการ:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "service_terms",
+          "label": "เงื่อนไขการบริการ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "loan": {
+      "title": "สัญญากู้ยืมเงิน",
+      "desc": "สัญญาสำหรับการกู้ยืมเงิน ระบุจำนวนเงิน ดอกเบี้ย และการผ่อนชำระ",
+      "icon": "fa-money-bill-wave",
+      "fields": [
+        {
+          "id": "loan_amount",
+          "label": "จำนวนเงินกู้:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "interest_rate",
+          "label": "อัตราดอกเบี้ย (% ต่อปี):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "repayment_period",
+          "label": "ระยะเวลาผ่อนชำระ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "collateral",
+          "label": "หลักประกัน:",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "repayment_schedule",
+          "label": "ตารางการชำระเงิน:",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "partnership": {
+      "title": "สัญญาหุ้นส่วน",
+      "desc": "สัญญาสำหรับการเป็นหุ้นส่วนทางธุรกิจ ระบุสัดส่วนการถือหุ้น สิทธิหน้าที่ และการแบ่งผลกำไร",
+      "icon": "fa-users",
+      "fields": [
+        {
+          "id": "business_name",
+          "label": "ชื่อธุรกิจ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "partnership_share",
+          "label": "สัดส่วนการถือหุ้น (%):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "capital_contribution",
+          "label": "เงินทุนที่ลงทุน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "profit_sharing",
+          "label": "การแบ่งผลกำไร:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "roles_responsibilities",
+          "label": "หน้าที่ความรับผิดชอบ:",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "nda": {
+      "title": "สัญญาปกปิดข้อมูล (NDA)",
+      "desc": "สัญญาสำหรับการรักษาความลับทางธุรกิจ ระบุข้อมูลที่ต้องเก็บเป็นความลับและระยะเวลา",
+      "icon": "fa-user-secret",
+      "fields": [
+        {
+          "id": "confidential_info",
+          "label": "ข้อมูลที่เป็นความลับ:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "nda_period",
+          "label": "ระยะเวลาการรักษาความลับ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "permitted_use",
+          "label": "การใช้ข้อมูลที่อนุญาต:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "penalty",
+          "label": "บทลงโทษกรณีฝ่าฝืน:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "franchise": {
+      "title": "สัญญาแฟรนไชส์",
+      "desc": "สัญญาสำหรับการให้สิทธิ์ดำเนินธุรกิจภายใต้แบรนด์ ระบุค่าแฟรนไชส์และเงื่อนไข",
+      "icon": "fa-store",
+      "fields": [
+        {
+          "id": "franchise_brand",
+          "label": "ชื่อแบรนด์แฟรนไชส์:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "franchise_fee",
+          "label": "ค่าแฟรนไชส์:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "royalty_fee",
+          "label": "ค่าลิขสิทธิ์ (% จากยอดขาย):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "franchise_period",
+          "label": "ระยะเวลาสัญญา:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "territory",
+          "label": "พื้นที่ดำเนินการ:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "support_training",
+          "label": "การสนับสนุนและฝึกอบรม:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "distribution": {
+      "title": "สัญญาตัวแทนจำหน่าย",
+      "desc": "สัญญาสำหรับการเป็นตัวแทนจำหน่ายสินค้า ระบุพื้นที่ เป้ายอดขาย และค่าตอบแทน",
+      "icon": "fa-truck",
+      "fields": [
+        {
+          "id": "products_distributed",
+          "label": "สินค้าที่จำหน่าย:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "distribution_area",
+          "label": "พื้นที่จำหน่าย:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "sales_target",
+          "label": "เป้ายอดขาย:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "commission_rate",
+          "label": "อัตราค่าคอมมิชชั่น (%):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "distribution_period",
+          "label": "ระยะเวลาสัญญา:",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "construction": {
+      "title": "สัญญาก่อสร้าง",
+      "desc": "สัญญาสำหรับงานก่อสร้าง ระบุขอบเขตงาน ค่าก่อสร้าง และระยะเวลาแล้วเสร็จ",
+      "icon": "fa-hard-hat",
+      "fields": [
+        {
+          "id": "project_name",
+          "label": "ชื่อโครงการ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "construction_scope",
+          "label": "ขอบเขตงานก่อสร้าง:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "construction_cost",
+          "label": "ค่าก่อสร้าง:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "completion_date",
+          "label": "กำหนดแล้วเสร็จ:",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "payment_schedule",
+          "label": "ตารางการชำระเงิน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "warranty_period",
+          "label": "ระยะเวลาการรับประกัน:",
+          "type": "text",
+          "required": false
+        }
+      ]
+    },
+    "consulting": {
+      "title": "สัญญาที่ปรึกษา",
+      "desc": "สัญญาสำหรับการให้คำปรึกษา ระบุขอบเขตงาน ค่าตอบแทน และระยะเวลา",
+      "icon": "fa-user-tie",
+      "fields": [
+        {
+          "id": "consulting_area",
+          "label": "สาขาการให้คำปรึกษา:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "consulting_scope",
+          "label": "ขอบเขตงาน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "consulting_fee",
+          "label": "ค่าตอบแทน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "consulting_period",
+          "label": "ระยะเวลาให้คำปรึกษา:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "deliverables",
+          "label": "ผลงานที่ส่งมอบ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "license": {
+      "title": "สัญญาอนุญาตใช้สิทธิ์",
+      "desc": "สัญญาสำหรับการอนุญาตให้ใช้ทรัพย์สินทางปัญญา ระบุขอบเขตการใช้และค่าตอบแทน",
+      "icon": "fa-certificate",
+      "fields": [
+        {
+          "id": "licensed_property",
+          "label": "ทรัพย์สินที่อนุญาตให้ใช้:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "license_scope",
+          "label": "ขอบเขตการใช้สิทธิ์:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "license_fee",
+          "label": "ค่าลิขสิทธิ์:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "license_period",
+          "label": "ระยะเวลาอนุญาต:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "restrictions",
+          "label": "ข้อจำกัดในการใช้:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "agency": {
+      "title": "สัญญาตัวแทน",
+      "desc": "สัญญาสำหรับการเป็นตัวแทนในการดำเนินการ ระบุอำนาจหน้าที่และค่าตอบแทน",
+      "icon": "fa-id-card",
+      "fields": [
+        {
+          "id": "agency_purpose",
+          "label": "วัตถุประสงค์การเป็นตัวแทน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "agency_authority",
+          "label": "อำนาจของตัวแทน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "agency_fee",
+          "label": "ค่าตอบแทนตัวแทน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "agency_period",
+          "label": "ระยะเวลาเป็นตัวแทน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "agency_limitations",
+          "label": "ข้อจำกัดของตัวแทน:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "mortgage": {
+      "title": "สัญญาจำนอง",
+      "desc": "สัญญาสำหรับการจำนองทรัพย์สิน ระบุทรัพย์สินที่จำนอง วงเงิน และระยะเวลา",
+      "icon": "fa-key",
+      "fields": [
+        {
+          "id": "mortgaged_property",
+          "label": "ทรัพย์สินที่จำนอง:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "mortgage_amount",
+          "label": "วงเงินจำนอง:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "mortgage_interest",
+          "label": "อัตราดอกเบี้ย (% ต่อปี):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "mortgage_period",
+          "label": "ระยะเวลาจำนอง:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "mortgage_terms",
+          "label": "เงื่อนไขการจำนอง:",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "pledge": {
+      "title": "สัญญาจำนำ",
+      "desc": "สัญญาสำหรับการจำนำทรัพย์สินเคลื่อนที่ ระบุทรัพย์สินที่จำนำและเงื่อนไข",
+      "icon": "fa-coins",
+      "fields": [
+        {
+          "id": "pledged_items",
+          "label": "ทรัพย์สินที่จำนำ:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "pledge_amount",
+          "label": "จำนวนเงิน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "pledge_interest",
+          "label": "อัตราดอกเบี้ย (% ต่อเดือน):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "pledge_period",
+          "label": "ระยะเวลาจำนำ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "redemption_terms",
+          "label": "เงื่อนไขการไถ่ถอน:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "insurance": {
+      "title": "สัญญาประกันภัย",
+      "desc": "สัญญาสำหรับการทำประกันภัย ระบุความคุ้มครอง เบี้ยประกัน และเงื่อนไข",
+      "icon": "fa-shield-alt",
+      "fields": [
+        {
+          "id": "insurance_type",
+          "label": "ประเภทประกันภัย:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "coverage_amount",
+          "label": "จำนวนเงินคุ้มครอง:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "premium",
+          "label": "เบี้ยประกันภัย:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "coverage_period",
+          "label": "ระยะเวลาคุ้มครอง:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "coverage_details",
+          "label": "รายละเอียดความคุ้มครอง:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "exclusions",
+          "label": "ข้อยกเว้น:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "transport": {
+      "title": "สัญญาขนส่ง",
+      "desc": "สัญญาสำหรับการขนส่งสินค้า ระบุเส้นทาง ค่าขนส่ง และความรับผิดชอบ",
+      "icon": "fa-shipping-fast",
+      "fields": [
+        {
+          "id": "cargo_details",
+          "label": "รายละเอียดสินค้า:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "origin_destination",
+          "label": "ต้นทาง-ปลายทาง:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "transport_fee",
+          "label": "ค่าขนส่ง:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "delivery_date",
+          "label": "กำหนดส่งมอบ:",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "liability_terms",
+          "label": "เงื่อนไขความรับผิดชอบ:",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "warehouse": {
+      "title": "สัญญาเก็บสินค้า",
+      "desc": "สัญญาสำหรับการเก็บรักษาสินค้าในคลังสินค้า ระบุค่าเก็บและความรับผิดชอบ",
+      "icon": "fa-warehouse",
+      "fields": [
+        {
+          "id": "stored_goods",
+          "label": "สินค้าที่เก็บรักษา:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "storage_area",
+          "label": "พื้นที่จัดเก็บ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "storage_fee",
+          "label": "ค่าเก็บรักษา (ต่อเดือน):",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "storage_period",
+          "label": "ระยะเวลาเก็บรักษา:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "storage_conditions",
+          "label": "เงื่อนไขการเก็บรักษา:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "factoring": {
+      "title": "สัญญาแฟคตอริ่ง",
+      "desc": "สัญญาสำหรับการซื้อลูกหนี้การค้า ระบุมูลค่าลูกหนี้และค่าธรรมเนียม",
+      "icon": "fa-file-invoice-dollar",
+      "fields": [
+        {
+          "id": "receivables_amount",
+          "label": "มูลค่าลูกหนี้:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "advance_rate",
+          "label": "อัตราการจ่ายล่วงหน้า (%):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "factoring_fee",
+          "label": "ค่าธรรมเนียม (%):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "debtor_details",
+          "label": "รายละเอียดลูกหนี้:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "factoring_terms",
+          "label": "เงื่อนไขเพิ่มเติม:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "guarantee": {
+      "title": "สัญญาค้ำประกัน",
+      "desc": "สัญญาสำหรับการค้ำประกันหนี้ ระบุรายละเอียดหนี้ที่ค้ำประกัน วงเงิน และระยะเวลา",
+      "icon": "fa-hands-helping",
+      "fields": [
+        {
+          "id": "guaranteed_debt",
+          "label": "หนี้ที่ค้ำประกัน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "guarantee_amount",
+          "label": "วงเงินค้ำประกัน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "guarantee_period",
+          "label": "ระยะเวลาค้ำประกัน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "guarantor_details",
+          "label": "รายละเอียดผู้ค้ำประกัน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "guarantee_terms",
+          "label": "เงื่อนไขการค้ำประกัน:",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "investment": {
+      "title": "สัญญาการลงทุน",
+      "desc": "สัญญาสำหรับการลงทุนในธุรกิจ ระบุจำนวนเงินลงทุน สัดส่วนหุ้น และสิทธิ์ของผู้ลงทุน",
+      "icon": "fa-chart-line",
+      "fields": [
+        {
+          "id": "investment_amount",
+          "label": "จำนวนเงินลงทุน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "equity_percentage",
+          "label": "สัดส่วนหุ้น (%):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "investment_purpose",
+          "label": "วัตถุประสงค์การลงทุน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "investor_rights",
+          "label": "สิทธิ์ของผู้ลงทุน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "exit_strategy",
+          "label": "กลยุทธ์การออกจากการลงทุน:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "credit_line": {
+      "title": "สัญญาเปิดเครดิตไลน์",
+      "desc": "สัญญาสำหรับการเปิดวงเงินสินเชื่อ ระบุวงเงิน ระยะเวลา และอัตราดอกเบี้ย",
+      "icon": "fa-credit-card",
+      "fields": [
+        {
+          "id": "credit_limit",
+          "label": "วงเงินสินเชื่อ:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "credit_period",
+          "label": "ระยะเวลา (ปี):",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "credit_interest",
+          "label": "อัตราดอกเบี้ย (% ต่อปี):",
+          "type": "number",
+          "step": "0.01",
+          "required": true
+        },
+        {
+          "id": "credit_fee",
+          "label": "ค่าธรรมเนียม:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "credit_terms",
+          "label": "เงื่อนไขการใช้เงิน:",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    },
+    "supplier": {
+      "title": "สัญญาซัพพลายเออร์",
+      "desc": "สัญญาสำหรับการเป็นซัพพลายเออร์ ระบุสินค้าที่จัดหา ราคา และเงื่อนไขการส่งมอบ",
+      "icon": "fa-boxes",
+      "fields": [
+        {
+          "id": "supplied_products",
+          "label": "สินค้าที่จัดหา:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "unit_price",
+          "label": "ราคาต่อหน่วย:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "minimum_order",
+          "label": "ปริมาณขั้นต่ำ:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "delivery_schedule",
+          "label": "กำหนดการส่งมอบ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "payment_terms",
+          "label": "เงื่อนไขการชำระเงิน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "quality_standards",
+          "label": "มาตรฐานคุณภาพ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "joint_venture": {
+      "title": "สัญญาร่วมทุน (Joint Venture)",
+      "desc": "สัญญาสำหรับการร่วมทุนในโครงการ ระบุสัดส่วนการลงทุน การแบ่งกำไร และความรับผิดชอบ",
+      "icon": "fa-handshake",
+      "fields": [
+        {
+          "id": "project_name",
+          "label": "ชื่อโครงการ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "investment_ratio",
+          "label": "สัดส่วนการลงทุน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "total_investment",
+          "label": "เงินลงทุนรวม:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "profit_loss_sharing",
+          "label": "การแบ่งกำไร-ขาดทุน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "management_structure",
+          "label": "โครงสร้างการบริหาร:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "project_duration",
+          "label": "ระยะเวลาโครงการ:",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    "maintenance": {
+      "title": "สัญญาบำรุงรักษา",
+      "desc": "สัญญาสำหรับการบำรุงรักษาอุปกรณ์หรือระบบ ระบุขอบเขตงาน ค่าบริการ และความถี่",
+      "icon": "fa-tools",
+      "fields": [
+        {
+          "id": "equipment_details",
+          "label": "รายละเอียดอุปกรณ์:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "maintenance_scope",
+          "label": "ขอบเขตการบำรุงรักษา:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "maintenance_fee",
+          "label": "ค่าบำรุงรักษา (ต่อปี):",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "maintenance_frequency",
+          "label": "ความถี่ในการบำรุงรักษา:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "response_time",
+          "label": "ระยะเวลาตอบสนอง:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "spare_parts",
+          "label": "การจัดหาอะไหล่:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "software_license": {
+      "title": "สัญญาใบอนุญาตซอฟต์แวร์",
+      "desc": "สัญญาสำหรับการใช้งานซอฟต์แวร์ ระบุจำนวนผู้ใช้ ระยะเวลา และค่าบริการ",
+      "icon": "fa-laptop-code",
+      "fields": [
+        {
+          "id": "software_name",
+          "label": "ชื่อซอฟต์แวร์:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "license_type",
+          "label": "ประเภทใบอนุญาต:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "user_count",
+          "label": "จำนวนผู้ใช้งาน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "license_fee",
+          "label": "ค่าใบอนุญาต (ต่อปี):",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "support_included",
+          "label": "การสนับสนุนที่รวมอยู่:",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "renewal_terms",
+          "label": "เงื่อนไขการต่ออายุ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "trademark": {
+      "title": "สัญญาโอนเครื่องหมายการค้า",
+      "desc": "สัญญาสำหรับการโอนเครื่องหมายการค้า ระบุเครื่องหมายที่โอน ราคา และเงื่อนไข",
+      "icon": "fa-trademark",
+      "fields": [
+        {
+          "id": "trademark_details",
+          "label": "รายละเอียดเครื่องหมายการค้า:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "registration_number",
+          "label": "เลขที่จดทะเบียน:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "transfer_price",
+          "label": "ราคาโอน:",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "product_categories",
+          "label": "หมวดหมู่สินค้า/บริการ:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "goodwill_included",
+          "label": "การโอนชื่อเสียง:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    },
+    "export_import": {
+      "title": "สัญญานำเข้า-ส่งออก",
+      "desc": "สัญญาสำหรับการซื้อขายระหว่างประเทศ ระบุสินค้า ราคา และเงื่อนไข Incoterms",
+      "icon": "fa-globe",
+      "fields": [
+        {
+          "id": "goods_description",
+          "label": "รายละเอียดสินค้า:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "quantity",
+          "label": "ปริมาณ:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "unit_price",
+          "label": "ราคาต่อหน่วย (USD):",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "incoterms",
+          "label": "เงื่อนไข Incoterms:",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "shipping_date",
+          "label": "กำหนดส่งสินค้า:",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "payment_method",
+          "label": "วิธีการชำระเงิน:",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "inspection_terms",
+          "label": "เงื่อนไขการตรวจสอบ:",
+          "type": "textarea",
+          "required": false
+        }
+      ]
+    }
+  }
+}

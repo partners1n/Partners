@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "tag": "Official Part",
+    "price": "฿12,900",
+    "title": "เปลี่ยนหน้าจอ iPhone 15 Pro Max (แท้แกะเครื่อง)",
+    "brand": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "issue": "หน้าจอแตก",
+    "address": "ศูนย์ซ่อมสาขาเซ็นทรัลเชียงใหม่",
+    "specs": { "beds": "1 ปี", "baths": "1 ชม.", "sqft": "รอรับได้เลย" },
+    "details": { "map": "High Quality", "parking": "มีประกัน", "facing": "OLED", "fee": "ฟรีค่าแรง" },
+    "images": [
+      "https://images.unsplash.com/photo-1603539270381-08183617e9e6?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1592890288564-76628a30a657?auto=format&fit=crop&w=800&q=80"
+    ],
+    "type": "อะไหล่แท้",
+    "description": "หน้าจอแท้ Original ถอดจากเครื่องศูนย์ ให้สีสันคมชัด True Tone ทำงานปกติ พร้อมซีลกาวกันน้ำมาตรฐานโรงงาน รับประกันยาวนาน"
+  },
+  {
+    "id": 2,
+    "tag": "Best Value",
+    "price": "฿1,500",
+    "title": "เปลี่ยนแบตเตอรี่ iPhone 13 / 14 (High Capacity)",
+    "brand": "Apple",
+    "model": "iPhone 13",
+    "issue": "แบตเตอรี่เสื่อม",
+    "address": "สาขาหน้า ม.เชียงใหม่",
+    "specs": { "beds": "6 เดือน", "baths": "30 นาที", "sqft": "แถมฟิล์ม" },
+    "details": { "year": "2024", "parking": "มอก.", "facing": "เพิ่มความจุ", "fee": "รวมค่าแรง" },
+    "images": [
+      "https://images.unsplash.com/photo-1619561081555-464a78c9d032?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1585338662803-a1789c094406?auto=format&fit=crop&w=800&q=80"
+    ],
+    "type": "แบตเตอรี่",
+    "description": "แบตเตอรี่คุณภาพสูง มาตรฐาน มอก. เพิ่มความจุใช้งานได้ยาวนานกว่าเดิม 20% พร้อมโปรแกรมจูนสุขภาพแบตเตอรี่ให้โชว์ 100%"
+  },
+  {
+    "id": 3,
+    "tag": "Expert Fix",
+    "price": "฿8,500",
+    "title": "ซ่อมบอร์ด เปิดไม่ติด Samsung S24 Ultra",
+    "brand": "Samsung",
+    "model": "Galaxy S24 Ultra",
+    "issue": "เปิดไม่ติด",
+    "address": "Lab ซ่อมเมนบอร์ด (สำนักงานใหญ่)",
+    "specs": { "beds": "3 เดือน", "baths": "3-5 วัน", "sqft": "กู้ข้อมูล" },
+    "details": { "year": "-", "parking": "-", "facing": "IC แท้", "fee": "เช็คฟรี" },
+    "images": [
+      "https://images.unsplash.com/photo-1591196155941-958b44407e3e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80"
+    ],
+    "type": "ซ่อมเมนบอร์ด",
+    "description": "บริการซ่อมเมนบอร์ดโดยช่างผู้เชี่ยวชาญ วิเคราะห์อาการด้วยเครื่องมือทันสมัย เน้นกู้ข้อมูลเดิมให้กลับมาครบถ้วน"
+  },
+  {
+    "id": 4,
+    "tag": "Hot Price",
+    "price": "฿4,500",
+    "title": "เปลี่ยนจองานเทียบ (OLED) Samsung S23",
+    "brand": "Samsung",
+    "model": "Galaxy S23",
+    "issue": "หน้าจอแตก",
+    "address": "สาขากาดสวนแก้ว",
+    "specs": { "beds": "3 เดือน", "baths": "2 ชม.", "sqft": "สแกนนิ้วได้" },
+    "details": { "year": "2023", "parking": "AAA+", "facing": "จอ OLED", "fee": "ฟรีติดกาว" },
+    "images": [
+      "https://images.unsplash.com/photo-1629895066928-8636b17c179c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512054502232-120feb11f725?auto=format&fit=crop&w=800&q=80"
+    ],
+    "type": "อะไหล่เทียบ",
+    "description": "ทางเลือกประหยัดงบ จอ OLED งานเทียบเกรด AAA+ สีสวย สัมผัสลื่น สแกนลายนิ้วมือได้ปกติ ในราคาที่ถูกกว่าศูนย์ครึ่งหนึ่ง"
+  }
+]

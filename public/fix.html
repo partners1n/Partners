@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th" class="antialiased">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+    <meta name="theme-color" content="#1e293b">
+    <meta name="description" content="iFix Partners ศูนย์ซ่อมมือถือครบวงจร เช็คราคาอะไหล่ ประเมินราคาซ่อม">
+    <title>iFix Partners | Intelligent Repair Service</title> 
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Spline+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: "#0B1120",   
+                            primary: "#2563EB", /* Tech Blue */
+                            accent: "#38BDF8",  /* Cyan/Sky */
+                            surface: "#ffffff",
+                        },
+                    },
+                    fontFamily: { 
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Sarabun", "sans-serif"],
+                    },
+                    animation: {
+                        'enter': 'enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'slide-in': 'slideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                    },
+                    keyframes: {
+                        enter: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideIn: {
+                             '0%': { opacity: '0', transform: 'translateX(20px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="app" class="relative w-full max-w-md mx-auto h-full bg-gray-50 dark:bg-[#0B1120] shadow-2xl overflow-hidden">
+        
+        <header id="header" class="absolute top-0 left-0 right-0 z-40 px-4 py-3 transition-all duration-300 rounded-b-[2rem] flex items-center justify-between pointer-events-none header-bg">
+            </header>
+
+        <main id="main-view" class="w-full pt-0 hide-scrollbar">
+            </main>
+
+        <nav id="bottom-nav" class="glass absolute bottom-0 w-full h-[calc(var(--nav-height)+var(--safe-area-bottom))] z-40 rounded-t-[2.5rem] px-6 transition-transform duration-300 transform translate-z-0">
+            <div class="relative w-full h-[var(--nav-height)] flex justify-between items-center">
+                <button onclick="Router.navigate('/')" data-path="/" class="nav-btn group flex flex-col items-center justify-center gap-1 text-gray-400 w-12 h-12 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                    <span class="material-symbols-rounded text-[28px] group-[.active]:text-brand-primary dark:group-[.active]:text-white transition-colors">home_repair_service</span>
+                </button>
+                <button onclick="Router.navigate('/support')" data-path="/support" class="nav-btn group flex flex-col items-center justify-center gap-1 text-gray-400 w-12 h-12 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                    <span class="material-symbols-rounded text-[26px] group-[.active]:text-brand-primary dark:group-[.active]:text-white transition-colors">support_agent</span>
+                </button>
+                
+                <div class="relative w-14 h-full flex items-start justify-center pointer-events-none">
+                    <button onclick="Router.navigate('/landing')" data-path="/landing" class="pointer-events-auto absolute -top-6 w-16 h-16 rounded-[1.2rem] bg-brand-primary text-white flex items-center justify-center shadow-[0_8px_20px_rgba(37,99,235,0.4)] border-4 border-gray-50 dark:border-[#0B1120] active:scale-95 active:shadow-sm transition-all duration-300 z-50 group">
+                        <span class="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform">build</span>
+                    </button>
+                </div>
+
+                <button onclick="Router.navigate('/contact')" data-path="/contact" class="nav-btn group flex flex-col items-center justify-center gap-1 text-gray-400 w-12 h-12 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                    <span class="material-symbols-rounded text-[26px] group-[.active]:text-brand-primary dark:group-[.active]:text-white transition-colors">description</span>
+                </button>
+                <button onclick="Router.navigate('/profile')" data-path="/profile" class="nav-btn group flex flex-col items-center justify-center gap-1 text-gray-400 w-12 h-12 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/5 transition-all">
+                    <span class="material-symbols-rounded text-[28px] group-[.active]:text-brand-primary dark:group-[.active]:text-white transition-colors">person</span>
+                </button>
+            </div>
+        </nav>
+
+        <div id="loanModal" class="fixed inset-0 z-[100] hidden pointer-events-none">
+             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 pointer-events-auto" id="loanModalBackdrop" onclick="UI.closeModal('loanModal')"></div>
+             <div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-[#0f172a] rounded-t-[2.5rem] transform translate-y-full transition-height pointer-events-auto shadow-2xl flex flex-col h-[60vh]" id="loanModalPanel">
+                 <div class="w-full pt-4 pb-2 bg-transparent z-10 sticky top-0 shrink-0 cursor-pointer" onclick="UI.closeModal('loanModal')">
+                     <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto opacity-50"></div>
+                 </div>
+                 <div class="px-6 pb-2 flex justify-between items-center border-b border-gray-100 dark:border-gray-800 shrink-0">
+                     <h3 class="text-lg font-display font-bold dark:text-white" id="modalTitle">ผ่อนชำระค่าซ่อม</h3>
+                     <button onclick="UI.closeModal('loanModal')" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:bg-gray-200"><span class="material-symbols-rounded text-lg">close</span></button>
+                 </div>
+                 <div class="overflow-y-auto hide-scrollbar p-6 flex-1 relative">
+                      <div id="simpleView" class="animate-enter pb-20">
+                          <div class="text-center mt-4 mb-8">
+                            <p class="text-gray-400 text-sm mb-1">ผ่อน 0% นาน 10 เดือน</p>
+                            <h2 class="text-4xl font-display font-bold text-brand-primary dark:text-brand-accent" id="monthlyPaymentDisplay">0</h2>
+                            <p class="text-xs text-gray-400 mt-2">บาท/เดือน</p>
+                          </div>
+                          
+                          <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-4 border border-blue-100 dark:border-blue-800">
+                             <p class="text-sm text-blue-800 dark:text-blue-200 flex items-start gap-2">
+                                <span class="material-symbols-rounded text-lg">info</span>
+                                สามารถผ่อนชำระผ่านบัตรเครดิตที่ร่วมรายการได้ 0% นานสูงสุด 10 เดือน
+                             </p>
+                          </div>
+                          <div id="bankListSimple" class="space-y-3"></div>
+                      </div>
+                 </div>
+             </div>
+        </div>
+
+        <div id="docModal" class="fixed inset-0 z-[100] hidden pointer-events-none">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 pointer-events-auto" id="docModalBackdrop" onclick="UI.closeModal('docModal')"></div>
+            <div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-[#0f172a] rounded-t-[2.5rem] transform translate-y-full transition-all duration-500 pointer-events-auto shadow-2xl flex flex-col h-[85vh]" id="docModalPanel">
+                <div class="w-full pt-4 pb-2 bg-transparent z-10 sticky top-0 shrink-0 cursor-pointer" onclick="UI.closeModal('docModal')">
+                    <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto opacity-50"></div>
+                </div>
+                <div class="px-6 pb-4 flex justify-between items-center border-b border-gray-100 dark:border-gray-800 shrink-0">
+                    <h3 class="text-lg font-display font-bold dark:text-white">เอกสาร</h3>
+                    <button onclick="UI.closeModal('docModal')" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:bg-gray-200"><span class="material-symbols-rounded text-lg">close</span></button>
+                </div>
+                <div class="overflow-y-auto hide-scrollbar p-6 flex-1 pb-24" id="docContent"></div>
+            </div>
+        </div>
+
+        <div id="mapModal" class="fixed inset-0 z-[100] hidden pointer-events-none">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0 pointer-events-auto" id="mapModalBackdrop" onclick="UI.closeModal('mapModal')"></div>
+            <div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-[#0f172a] rounded-t-[2.5rem] transform translate-y-full transition-all duration-500 pointer-events-auto shadow-2xl flex flex-col h-[85vh]" id="mapModalPanel">
+                <div class="w-full pt-4 pb-2 bg-transparent z-10 sticky top-0 shrink-0 cursor-pointer" onclick="UI.closeModal('mapModal')">
+                    <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto opacity-50"></div>
+                </div>
+                <div class="px-6 pb-4 flex justify-between items-center border-b border-gray-100 dark:border-gray-800 shrink-0">
+                    <h3 class="text-lg font-display font-bold dark:text-white">แผนที่สาขา</h3>
+                    <button onclick="UI.closeModal('mapModal')" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:bg-gray-200"><span class="material-symbols-rounded text-lg">close</span></button>
+                </div>
+                <div class="flex-1 relative bg-gray-100 w-full h-full">
+                    <iframe id="mapFrame" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d30232.89886470473!2d98.985!3d18.795!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDQ3JzQyLjAiTiA5OMKwNTknMDYuMCJF!5e0!3m2!1sen!2sth!4v1625555555555!5m2!1sen!2sth"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Registration Failed', err));
+            });
+        }
+    </script>
+</body>
+</html>

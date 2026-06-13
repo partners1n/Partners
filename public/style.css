@@ -1,0 +1,247 @@
+:root {
+    --app-height: 100dvh;
+    --nav-height: 70px; 
+    --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Base System Styles */
+body {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-family: 'Sarabun', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    height: var(--app-height);
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    /* DeepMind Optimization: ป้องกันการเด้งของ Scroll ในระดับ Root เพื่อควบคุม Physics เอง */
+    overscroll-behavior: none;
+}
+
+.dark body { 
+    background-color: #0B1120; 
+    color: #f1f5f9; 
+}
+
+/* Utilities */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Typography */
+.prose p { margin-bottom: 0.8rem; }
+.prose strong { color: #C5A059; font-weight: 700; }
+.prose ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; }
+
+/* Layout Architecture */
+#app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#main-view {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 60px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    -webkit-overflow-scrolling: touch;
+    /* GPU Optimization for Content Scrolling */
+    will-change: scroll-position;
+}
+#main-view.loaded { opacity: 1; }
+
+/* Physics Scroll Container (For Horizontal Cards) */
+.physics-scroll {
+    display: flex;
+    gap: 1rem;
+    cursor: grab;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    /* GPU Optimization for Horizontal Swiping */
+    will-change: scroll-position, transform;
+}
+.physics-scroll > * { scroll-snap-align: center; }
+
+/* Glassmorphism Components */
+.glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    /* Force GPU Layer for smoother sticky nav */
+    transform: translateZ(0);
+}
+.dark .glass {
+    background: rgba(11, 17, 32, 0.85);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Header Dynamic States */
+.header-bg { 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    will-change: background, box-shadow, transform;
+}
+
+.header-scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+.dark .header-scrolled {
+    background: rgba(11, 17, 32, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Thumbnail Gallery System */
+.thumb-scroll {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.thumb-item {
+    width: 60px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0.6;
+    transition: opacity 0.2s, border-color 0.2s;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+.thumb-item.active {
+    opacity: 1;
+    border-color: #C5A059;
+}
+.thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Modal Animations */
+.transition-height {
+    /* Advanced Bezier Curve for Natural Motion */
+    transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* A4 Document Rendering Engine */
+#a4-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.a4-page {
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm;
+    background: #fff;
+    color: #000;
+    padding: 20mm;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    font-size: 13px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.doc-title {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.doc-section {
+    margin-bottom: 18px;
+    border-bottom: 1px dashed #e2e8f0;
+    padding-bottom: 15px;
+}
+.doc-section:last-child { border-bottom: none; }
+
+.doc-section h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.doc-section p, 
+.doc-section li {
+    line-height: 1.6;
+    color: #475569;
+}
+
+/* Contact Page Specifics */
+.contact-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.dark .contact-header {
+    background: rgba(11, 17, 32, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Action Buttons (Floating) */
+.fixed-action-buttons {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 4px);
+    left: 0;
+    right: 0;
+    padding: 0 1rem;
+    z-index: 30;
+    pointer-events: none;
+}
+
+.fixed-action-buttons button {
+    pointer-events: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-action-buttons button:active {
+    transform: scale(0.98);
+}
+
+/* Theme Transitions */
+[data-theme] {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Loading States */
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
+}

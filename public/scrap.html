@@ -1,0 +1,511 @@
+ <!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>PARTNERS PWA | Enterprise Marketing</title>
+    
+    <meta name="theme-color" content="#e8ecf1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #e8ecf1;
+            --bg-secondary: #f0f4f8;
+            --shadow-light: 6px 6px 12px rgba(124, 155, 195, 0.2), -6px -6px 12px rgba(255, 255, 255, 0.8);
+            --shadow-inset: inset 4px 4px 8px rgba(124, 155, 195, 0.2), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+            --primary: #7c9bc3;
+            --accent: #f0a060;
+            --text-primary: #3d5a6c;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Kanit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            height: 100dvh; /* ใช้ dvh สำหรับมือถือ */
+            overflow: hidden;
+            touch-action: pan-y; /* ป้องกัน pinch zoom */
+        }
+
+        /* Three.js Background Canvas */
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.4; /* ให้พื้นหลังจางลงไม่กวน UI */
+            pointer-events: none;
+        }
+
+        /* Neumorphism Classes */
+        .neo-card {
+            background: var(--bg-secondary);
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-light);
+            padding: 1.5rem;
+        }
+
+        .neo-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-inset);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .neo-input:focus {
+            box-shadow: var(--shadow-inset), 0 0 0 2px rgba(124, 155, 195, 0.3);
+        }
+
+        .neo-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 1rem;
+            padding: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-light);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .neo-btn:active {
+            box-shadow: var(--shadow-inset);
+            transform: scale(0.98);
+        }
+
+        .neo-btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 4px 4px 10px rgba(240, 160, 96, 0.4), -4px -4px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .neo-btn-primary:active {
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2), inset -2px -2px 5px rgba(255,255,255,0.3);
+        }
+
+        /* Bottom Navigation for Mobile */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(240, 244, 248, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0.5rem calc(1rem + env(safe-area-inset-bottom));
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            border-top-left-radius: 2rem;
+            border-top-right-radius: 2rem;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+            gap: 0.25rem;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            box-shadow: var(--shadow-inset);
+        }
+
+        .nav-item i { font-size: 1.25rem; }
+
+        /* SPA Layout */
+        .app-container {
+            height: calc(100dvh - 80px); /* เผื่อที่ให้ Bottom Nav */
+            overflow-y: auto;
+            padding: 1.5rem;
+            padding-bottom: 3rem;
+        }
+
+        .page-view {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .page-view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Checkbox Override */
+        input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="webgl-container"></div>
+
+    <div class="app-container" id="scroll-area">
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 id="view-title" class="text-2xl font-bold tracking-tight text-[#3d5a6c]">Dashboard</h1>
+                <p class="text-xs text-[#7c9bc3] mt-1">PARTNERS PWA</p>
+            </div>
+            <div class="w-12 h-12 rounded-full neo-card p-0 flex items-center justify-center bg-gradient-to-br from-[#7c9bc3] to-[#3d5a6c] text-white">
+                <i class="fa fa-handshake-o text-xl"></i>
+            </div>
+        </header>
+
+        <main id="dashboard" class="page-view active">
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="neo-card flex flex-col items-center justify-center text-center p-4">
+                    <i class="fa fa-database text-2xl text-[#7c9bc3] mb-2"></i>
+                    <h3 class="text-2xl font-black text-[#f0a060]">12K</h3>
+                    <p class="text-[10px] uppercase font-bold text-[#7c9bc3] mt-1">Items</p>
+                </div>
+                <div class="neo-card flex flex-col items-center justify-center text-center p-4">
+                    <i class="fa fa-check-circle text-2xl text-green-500 mb-2"></i>
+                    <h3 class="text-2xl font-black text-[#3d5a6c]">Ready</h3>
+                    <p class="text-[10px] uppercase font-bold text-[#7c9bc3] mt-1">System</p>
+                </div>
+            </div>
+
+            <div class="neo-card">
+                <h4 class="font-bold text-[#f0a060] mb-3 text-sm">System Logs</h4>
+                <div class="text-xs space-y-2 text-[#7c9bc3] bg-[#e8ecf1] p-3 rounded-xl shadow-inner font-mono">
+                    <p>> Engine: Three.js Initialized</p>
+                    <p>> Physics: Lorenz Attractor Active</p>
+                    <p class="text-green-500">> Status: Ready to Scrape.</p>
+                </div>
+            </div>
+        </main>
+
+        <main id="scraper" class="page-view">
+            <div class="neo-card mb-6">
+                <h3 class="text-lg font-bold mb-4">Universal Scraper</h3>
+                
+                <div class="space-y-4">
+                    <input type="url" id="target-url" class="neo-input" placeholder="วางลิงก์เว็บไซต์ที่นี่ (https://...)">
+                    
+                    <div class="grid grid-cols-2 gap-3 p-3 rounded-xl" style="box-shadow: var(--shadow-inset);">
+                        <label class="flex items-center text-sm gap-2 cursor-pointer"><input type="checkbox" id="opt-images" checked> รูปภาพ</label>
+                        <label class="flex items-center text-sm gap-2 cursor-pointer"><input type="checkbox" id="opt-videos"> วิดีโอ</label>
+                        <label class="flex items-center text-sm gap-2 cursor-pointer"><input type="checkbox" id="opt-links"> ลิงก์</label>
+                        <label class="flex items-center text-sm gap-2 cursor-pointer"><input type="checkbox" id="opt-alt"> Text/Alt</label>
+                    </div>
+
+                    <div class="flex flex-col gap-3 mt-4">
+                        <button onclick="AppEngine.startScrape()" class="neo-btn neo-btn-primary py-3">
+                            <i class="fa fa-bolt"></i> Start Extracting
+                        </button>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="AppEngine.clearResults()" class="neo-btn text-red-400 text-sm">
+                                <i class="fa fa-trash"></i> ล้าง
+                            </button>
+                            <button id="btn-export" onclick="AppEngine.exportCSV()" class="neo-btn text-[#7c9bc3] text-sm opacity-50 pointer-events-none">
+                                <i class="fa fa-download"></i> CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loader" class="hidden text-center py-6">
+                <i class="fa fa-circle-o-notch fa-spin text-3xl text-[#f0a060]"></i>
+                <p class="text-xs mt-3 text-[#7c9bc3]">กำลังประมวลผลข้อมูล...</p>
+            </div>
+
+            <div id="results-container" class="space-y-3"></div>
+        </main>
+
+        <main id="settings" class="page-view">
+            <div class="neo-card">
+                <h3 class="text-lg font-bold mb-4">ตั้งค่าระบบ</h3>
+                <p class="text-sm text-[#7c9bc3]">แอปพลิเคชันเวอร์ชัน 2.0 (Mobile First)</p>
+                <div class="mt-4 p-4 rounded-xl text-center" style="box-shadow: var(--shadow-inset);">
+                    <i class="fa fa-rocket text-4xl text-[#f0a060] mb-2"></i>
+                    <p class="text-xs font-medium">Lorenz Chaos Physics Engine: <span class="text-green-500">Active</span></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="AppEngine.switchTab('dashboard')" id="nav-dashboard">
+            <i class="fa fa-th-large"></i><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="AppEngine.switchTab('scraper')" id="nav-scraper">
+            <i class="fa fa-database"></i><span>Scrape</span>
+        </div>
+        <div class="nav-item" onclick="AppEngine.switchTab('settings')" id="nav-settings">
+            <i class="fa fa-cog"></i><span>Settings</span>
+        </div>
+    </nav>
+
+    <script>
+        /**
+         * 1. Advanced Mathematical Engine (Three.js + Lorenz Attractor)
+         */
+        class PhysicsBackground {
+            constructor() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                this.particles = null;
+                this.particleCount = 2000; // ปรับให้เหมาะกับ Mobile
+                
+                // Lorenz parameters
+                this.sigma = 10;
+                this.rho = 28;
+                this.beta = 8 / 3;
+                this.dt = 0.005;
+
+                this.init();
+            }
+
+            init() {
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                document.getElementById('webgl-container').appendChild(this.renderer.domElement);
+
+                const geometry = new THREE.BufferGeometry();
+                const positions = new Float32Array(this.particleCount * 3);
+
+                // Initial Random Spread
+                for (let i = 0; i < this.particleCount; i++) {
+                    positions[i * 3] = (Math.random() - 0.5) * 50;
+                    positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
+                }
+
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                
+                const material = new THREE.PointsMaterial({
+                    color: 0x7c9bc3, // Theme primary color
+                    size: 0.2,
+                    transparent: true,
+                    opacity: 0.6
+                });
+
+                this.particles = new THREE.Points(geometry, material);
+                this.scene.add(this.particles);
+
+                this.camera.position.z = 60;
+                this.camera.position.y = 25;
+                this.camera.lookAt(0, 25, 0);
+
+                window.addEventListener('resize', () => this.onResize());
+                this.animate();
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+
+                const positions = this.particles.geometry.attributes.position.array;
+
+                // Advanced Math: Numerical integration for Lorenz Equations
+                for (let i = 0; i < this.particleCount; i++) {
+                    let x = positions[i * 3];
+                    let y = positions[i * 3 + 1];
+                    let z = positions[i * 3 + 2];
+
+                    let dx = (this.sigma * (y - x)) * this.dt;
+                    let dy = (x * (this.rho - z) - y) * this.dt;
+                    let dz = ((x * y) - (this.beta * z)) * this.dt;
+
+                    positions[i * 3] += dx;
+                    positions[i * 3 + 1] += dy;
+                    positions[i * 3 + 2] += dz;
+                }
+
+                this.particles.geometry.attributes.position.needsUpdate = true;
+                this.particles.rotation.y += 0.002;
+
+                this.renderer.render(this.scene, this.camera);
+            }
+
+            onResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        /**
+         * 2. Application Logic (Refactored & Optimized)
+         */
+        const AppEngine = {
+            dataStore: [],
+            
+            init() {
+                new PhysicsBackground(); // Start Math Engine
+            },
+
+            switchTab(tabId) {
+                document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                
+                document.getElementById(tabId).classList.add('active');
+                document.getElementById(`nav-${tabId}`).classList.add('active');
+                
+                const titles = { dashboard: 'Dashboard', scraper: 'Web Scraper', settings: 'Settings' };
+                document.getElementById('view-title').innerText = titles[tabId];
+            },
+
+            async startScrape() {
+                const urlInput = document.getElementById('target-url').value;
+                if(!urlInput) return alert('กรุณาระบุ URL ครับ');
+
+                const opts = {
+                    img: document.getElementById('opt-images').checked,
+                    vid: document.getElementById('opt-videos').checked,
+                    lnk: document.getElementById('opt-links').checked,
+                    alt: document.getElementById('opt-alt').checked
+                };
+
+                this.toggleLoader(true);
+                this.clearResults();
+
+                try {
+                    // ใช้ AllOrigins เพื่อแก้ปัญหา CORS (Cross-Origin Resource Sharing)
+                    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`);
+                    const data = await res.json();
+                    
+                    const doc = new DOMParser().parseFromString(data.contents, 'text/html');
+                    this.extractData(doc, urlInput, opts);
+                    this.renderResults();
+                } catch (err) {
+                    alert('ไม่สามารถดึงข้อมูลได้: ' + err.message);
+                } finally {
+                    this.toggleLoader(false);
+                }
+            },
+
+            extractData(doc, baseUrl, opts) {
+                const fixUrl = (raw) => {
+                    if (!raw || raw.startsWith('data:')) return null;
+                    try { return new URL(raw, baseUrl).href; } catch { return null; }
+                };
+
+                if (opts.img) {
+                    doc.querySelectorAll('img').forEach(el => {
+                        const src = fixUrl(el.getAttribute('src') || el.getAttribute('data-src'));
+                        if(src) this.dataStore.push({ type: 'Image', url: src, text: opts.alt ? el.alt : '' });
+                    });
+                }
+                if (opts.vid) {
+                    doc.querySelectorAll('video, source').forEach(el => {
+                        const src = fixUrl(el.getAttribute('src'));
+                        if(src) this.dataStore.push({ type: 'Video', url: src, text: opts.alt ? el.title : '' });
+                    });
+                }
+                if (opts.lnk) {
+                    doc.querySelectorAll('a[href]').forEach(el => {
+                        const src = fixUrl(el.getAttribute('href'));
+                        if(src && src.startsWith('http')) {
+                            this.dataStore.push({ type: 'Link', url: src, text: opts.alt ? el.textContent.trim() : '' });
+                        }
+                    });
+                }
+            },
+
+            renderResults() {
+                const container = document.getElementById('results-container');
+                const btnExport = document.getElementById('btn-export');
+                
+                if (this.dataStore.length === 0) {
+                    container.innerHTML = '<p class="text-center text-sm text-gray-400 mt-4">ไม่พบข้อมูล</p>';
+                    return;
+                }
+
+                // Enable Export Button
+                btnExport.classList.remove('opacity-50', 'pointer-events-none');
+
+                let html = '';
+                // Limit preview to 50 items to keep mobile DOM light
+                const displayData = this.dataStore.slice(0, 50); 
+                
+                displayData.forEach(item => {
+                    const iconColor = item.type === 'Video' ? 'text-red-400' : item.type === 'Image' ? 'text-[#f0a060]' : 'text-[#7c9bc3]';
+                    const icon = item.type === 'Video' ? 'fa-play-circle' : item.type === 'Image' ? 'fa-picture-o' : 'fa-link';
+                    
+                    html += `
+                        <div class="neo-card p-4 flex gap-3 items-center overflow-hidden">
+                            <i class="fa ${icon} ${iconColor} text-xl w-6 text-center shrink-0"></i>
+                            <div class="truncate flex-1">
+                                <p class="text-[10px] font-bold uppercase text-[#7c9bc3]">${item.type}</p>
+                                <a href="${item.url}" target="_blank" class="text-sm font-medium text-[#3d5a6c] truncate block w-full hover:text-[#f0a060]">${item.url}</a>
+                                ${item.text ? `<p class="text-xs text-gray-500 truncate mt-1">${item.text}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if(this.dataStore.length > 50) {
+                    html += `<p class="text-center text-xs text-[#7c9bc3] mt-4">+ อีก ${this.dataStore.length - 50} รายการ (กดส่งออก CSV เพื่อดูทั้งหมด)</p>`;
+                }
+
+                container.innerHTML = html;
+            },
+
+            clearResults() {
+                this.dataStore = [];
+                document.getElementById('results-container').innerHTML = '';
+                document.getElementById('btn-export').classList.add('opacity-50', 'pointer-events-none');
+            },
+
+            exportCSV() {
+                if(this.dataStore.length === 0) return;
+                
+                const rows = this.dataStore.map(r => `"${r.type}","${r.url}","${r.text.replace(/"/g, '""')}"`);
+                const csvContent = "Type,URL,Text\n" + rows.join("\n");
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Scrape_Data_${new Date().getTime()}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            },
+
+            toggleLoader(show) {
+                document.getElementById('loader').classList.toggle('hidden', !show);
+            }
+        };
+
+        // Bootstrap the app when ready
+        window.addEventListener('DOMContentLoaded', () => {
+            AppEngine.init();
+        });
+    </script>
+</body>
+</html>

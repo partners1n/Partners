@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset='UTF-8'/>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'/>
+    <meta name='apple-mobile-web-app-capable' content='yes'/>
+    <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'/>
+    <title>เลขาผู้ช่วยส่วนตัว</title>
+    <link href='https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap' rel='stylesheet'/>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css' rel='stylesheet'/>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --secondary-gradient: linear-gradient(135deg, #f472b6, #db2777);
+            --bg-color: #ffffff;
+            --chat-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bot-message-bg: #f1f5f9;
+            --user-message-bg: #818cf8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --safe-area-inset-top: env(safe-area-inset-top, 0px);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-inset-left: env(safe-area-inset-left, 0px);
+            --safe-area-inset-right: env(safe-area-inset-right, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: var(--safe-area-inset-top);
+            left: var(--safe-area-inset-left);
+            right: var(--safe-area-inset-right);
+            bottom: var(--safe-area-inset-bottom);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            width: 100%;
+            z-index: 10;
+            padding-top: calc(1rem + var(--safe-area-inset-top));
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .bot-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            -webkit-animation: pulse 2s infinite;
+            animation-play-state: running !important;
+            -webkit-animation-play-state: running !important;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .clear-chat-button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .clear-chat-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: var(--chat-bg);
+            scroll-behavior: smooth;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageAppear 0.5s ease forwards;
+            -webkit-animation: messageAppear 0.5s ease forwards;
+        }
+
+        @keyframes messageAppear {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            margin-right: 1rem;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .user-message .avatar {
+            background: var(--secondary-gradient);
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-sm);
+            line-height: 1.5;
+            position: relative;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .message-bubble img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+
+        .bot-message .message-bubble {
+            background-color: var(--bot-message-bg);
+            border-top-left-radius: 0;
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .user-message .avatar {
+            margin-right: 0;
+            margin-left: 1rem;
+        }
+
+        .user-message .message-bubble {
+            background-color: var(--user-message-bg);
+            color: white;
+            border-top-right-radius: 0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+            width: 100%;
+            padding-bottom: calc(1rem + var(--safe-area-inset-bottom));
+            z-index: 10;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .action-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .action-button:hover {
+            background-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            resize: none;
+            font-size: 1rem;
+            min-height: 40px;
+            max-height: 120px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .message-input:focus {
+            border-color: #818cf8;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-color);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            -webkit-animation: modalSlideIn 0.3s ease;
+            width: 500px;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #818cf8;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .modal-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .doc-item {
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .doc-item:hover {
+            border-color: #818cf8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .doc-item i {
+            font-size: 2rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .doc-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .doc-item-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .header-title h1 {
+                font-size: 1.25rem;
+                max-width: 150px;
+            }
+
+            .modal {
+                max-width: 95%;
+                padding: 1.5rem;
+            }
+
+            .doc-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+            animation: loadingDot 1.4s infinite ease-in-out;
+            -webkit-animation: loadingDot 1.4s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+            -webkit-animation-delay: -0.32s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+            -webkit-animation-delay: -0.16s;
+        }
+
+        @keyframes loadingDot {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">
+                <h1>🤖 AI Assistant</h1>
+                <div class="bot-status">
+                    <div class="status-indicator"></div>
+                    <span>ออนไลน์</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="clear-chat-button" id="clearChat">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>ล้างแชท</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer"></div>
+
+        <div class="input-container">
+            <div class="action-buttons">
+                <button class="action-button" id="infoButton" title="ข้อมูลส่วนตัว">
+                    <i class="fas fa-user"></i>
+                </button>
+                <button class="action-button" id="contactButton" title="ข้อมูลผู้ติดต่อ">
+                    <i class="fas fa-address-book"></i>
+                </button>
+                <button class="action-button" id="documentButton" title="สร้างเอกสาร">
+                    <i class="fas fa-file-alt"></i>
+                </button>
+                <button class="action-button" id="generateDocButton" title="สร้างภาพ">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="action-button" id="attachButton" title="แนบรูปภาพ">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <button class="action-button" id="micButton" title="พิมพ์ด้วยเสียง">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="action-button" id="copyButton" title="คัดลอกข้อความ">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="action-button" id="pasteButton" title="วางข้อความ">
+                    <i class="fas fa-paste"></i>
+                </button>
+            </div>
+            <textarea class="message-input" id="messageInput" placeholder="พิมพ์ข้อความ..." rows="1"></textarea>
+            <button class="send-button" id="sendButton">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+    </div>
+
+    <!-- Modal สำหรับข้อมูลส่วนตัว -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="infoModal">
+            <div class="modal-header">
+                <h2>ข้อมูลส่วนตัว</h2>
+                <button class="close-modal" id="closeInfoModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="infoForm">
+                <div class="form-group">
+                    <label for="fullName">ชื่อ-นามสกุล:</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="idCard">เลขบัตรประชาชน:</label>
+                    <input type="text" id="idCard" name="idCard" maxlength="13" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">ที่อยู่:</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="phone">เบอร์โทร:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">อีเมล:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <button type="submit" class="modal-button">บันทึก</button>
+            </form>
+        </div>
+
+        <!-- Modal สำหรับข้อมูลผู้ติดต่อ -->
+        <div class="modal" id="contactModal" style="display: none;">
+            <div class="modal-header">
+                <h2>ข้อมูลผู้ติดต่อ</h2>
+                <button class="close-modal" id="closeContactModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="contactName">ชื่อผู้ติดต่อ:</label>
+                    <input type="text" id="contactName" name="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPhone">เบอร์โทร:</label>
+                    <input type="tel" id="contactPhone" name="contactPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">อีเมล:</label>
+                    <input type="email" id="contactEmail" name="contactEmail">
+                </div>
+                <div class="form-group">
+                    <label for="contactRelation">ความสัมพันธ์:</label>
+                    <input type="text" id="contactRelation" name="contactRelation">
+                </div>
+                <button type="submit" class="modal-button">บันทึก</button>
+            </form>
+        </div>
+
+        <!-- Modal สำหรับเลือกประเภทเอกสาร -->
+        <div class="modal" id="documentModal" style="display: none;">
+            <div class="modal-header">
+                <h2>เลือกประเภทเอกสาร</h2>
+                <button class="close-modal" id="closeDocumentModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="doc-grid" id="docGrid">
+                <!-- จะถูกเติมด้วย JavaScript -->
+            </div>
+        </div>
+
+        <!-- Modal สำหรับฟอร์มสร้างสัญญา -->
+        <div class="modal" id="contractFormModal" style="display: none;">
+            <div class="modal-header">
+                <button class="close-modal" id="backContractFormModal" style="margin-right: auto;">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h2 id="contractFormTitle">สัญญา</h2>
+                <button class="close-modal" id="closeContractFormModal" style="visibility: hidden;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="contractForm">
+                <div id="contractFormFields">
+                    <!-- ฟิลด์จะถูกเติมด้วย JavaScript -->
+                </div>
+                <button type="submit" class="modal-button">สร้างเอกสาร</button>
+            </form>
+        </div>
+
+        <!-- Modal สำหรับสร้างภาพ -->
+        <div class="modal" id="docModal" style="display: none;">
+            <div class="modal-header">
+                <h2>สร้างภาพด้วย AI</h2>
+                <button class="close-modal" id="closeDocModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="imagePrompt">คำอธิบายภาพที่ต้องการ:</label>
+                <textarea id="imagePrompt" placeholder="เช่น: แมวสีขาวนั่งบนโต๊ะ มีแสงอาทิตย์ส่องเข้ามา" rows="4"></textarea>
+            </div>
+            <button class="modal-button" id="generateImageButton">
+                <i class="fas fa-magic"></i> สร้างภาพ
+            </button>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<script>
+    // ข้อมูลสัญญาทั้งหมด - Embedded ไว้ในโค้ดแล้ว
+    const CONTRACTS_DATA = {
+        'sale': {
+            title: 'สัญญาซื้อขาย',
+            desc: 'สัญญาสำหรับการซื้อขายสินค้าหรือทรัพย์สิน ระบุรายละเอียดสินค้า ราคา และเงื่อนไขการชำระเงิน',
+            icon: 'fa-handshake',
+            fields: [
+                { id: 'product_name', label: 'ชื่อสินค้า/ทรัพย์สิน:', type: 'text', required: true },
+                { id: 'sale_price', label: 'ราคาขาย:', type: 'number', required: true },
+                { id: 'payment_terms', label: 'เงื่อนไขการชำระเงิน:', type: 'textarea', required: true },
+                { id: 'delivery_terms', label: 'เงื่อนไขการส่งมอบ:', type: 'textarea', required: false }
+            ]
+        },
+        'lease': {
+            title: 'สัญญาเช่า',
+            desc: 'สัญญาสำหรับการเช่าอสังหาริมทรัพย์ ระบุค่าเช่า ระยะเวลา และเงื่อนไขต่างๆ',
+            icon: 'fa-home',
+            fields: [
+                { id: 'property_address', label: 'ที่อยู่ทรัพย์สิน:', type: 'textarea', required: true },
+                { id: 'rental_amount', label: 'ค่าเช่าต่อเดือน:', type: 'number', required: true },
+                { id: 'lease_period', label: 'ระยะเวลาเช่า:', type: 'text', required: true },
+                { id: 'deposit_amount', label: 'เงินประกัน:', type: 'number', required: false },
+                { id: 'additional_terms', label: 'เงื่อนไขเพิ่มเติม:', type: 'textarea', required: false }
+            ]
+        },
+        'employment': {
+            title: 'สัญญาจ้างงาน',
+            desc: 'สัญญาสำหรับการจ้างพนักงาน ระบุตำแหน่ง เงินเดือน และสวัสดิการ',
+            icon: 'fa-briefcase',
+            fields: [
+                { id: 'position', label: 'ตำแหน่งงาน:', type: 'text', required: true },
+                { id: 'salary', label: 'เงินเดือน:', type: 'number', required: true },
+                { id: 'work_schedule', label: 'เวลาทำงาน:', type: 'text', required: true },
+                { id: 'start_date', label: 'วันที่เริ่มงาน:', type: 'date', required: true },
+                { id: 'benefits', label: 'สวัสดิการ:', type: 'textarea', required: false }
+            ]
+        },
+        'service': {
+            title: 'สัญญาบริการ',
+            desc: 'สัญญาสำหรับการให้บริการ ระบุรายละเอียดบริการ ค่าบริการ และระยะเวลา',
+            icon: 'fa-cogs',
+            fields: [
+                { id: 'service_type', label: 'ประเภทบริการ:', type: 'text', required: true },
+                { id: 'service_fee', label: 'ค่าบริการ:', type: 'number', required: true },
+                { id: 'service_period', label: 'ระยะเวลาบริการ:', type: 'text', required: true },
+                { id: 'service_scope', label: 'ขอบเขตการบริการ:', type: 'textarea', required: true },
+                { id: 'service_terms', label: 'เงื่อนไขการบริการ:', type: 'textarea', required: false }
+            ]
+        },
+        'loan': {
+            title: 'สัญญากู้ยืมเงิน',
+            desc: 'สัญญาสำหรับการกู้ยืมเงิน ระบุจำนวนเงิน ดอกเบี้ย และการผ่อนชำระ',
+            icon: 'fa-money-bill-wave',
+            fields: [
+                { id: 'loan_amount', label: 'จำนวนเงินกู้:', type: 'number', required: true },
+                { id: 'interest_rate', label: 'อัตราดอกเบี้ย (% ต่อปี):', type: 'number', step: '0.01', required: true },
+                { id: 'repayment_period', label: 'ระยะเวลาผ่อนชำระ:', type: 'text', required: true },
+                { id: 'collateral', label: 'หลักประกัน:', type: 'textarea', required: false },
+                { id: 'repayment_schedule', label: 'ตารางการชำระเงิน:', type: 'textarea', required: true }
+            ]
+        },
+        'partnership': {
+            title: 'สัญญาหุ้นส่วน',
+            desc: 'สัญญาสำหรับการเป็นหุ้นส่วนทางธุรกิจ ระบุสัดส่วนการถือหุ้น สิทธิหน้าที่ และการแบ่งผลกำไร',
+            icon: 'fa-users',
+            fields: [
+                { id: 'business_name', label: 'ชื่อธุรกิจ:', type: 'text', required: true },
+                { id: 'partnership_share', label: 'สัดส่วนการถือหุ้น (%):', type: 'number', step: '0.01', required: true },
+                { id: 'capital_contribution', label: 'เงินทุนที่ลงทุน:', type: 'number', required: true },
+                { id: 'profit_sharing', label: 'การแบ่งผลกำไร:', type: 'textarea', required: true },
+                { id: 'roles_responsibilities', label: 'หน้าที่ความรับผิดชอบ:', type: 'textarea', required: true }
+            ]
+        },
+        'nda': {
+            title: 'สัญญาปกปิดข้อมูล (NDA)',
+            desc: 'สัญญาสำหรับการรักษาความลับทางธุรกิจ ระบุข้อมูลที่ต้องเก็บเป็นความลับและระยะเวลา',
+            icon: 'fa-user-secret',
+            fields: [
+                { id: 'confidential_info', label: 'ข้อมูลที่เป็นความลับ:', type: 'textarea', required: true },
+                { id: 'nda_period', label: 'ระยะเวลาการรักษาความลับ:', type: 'text', required: true },
+                { id: 'permitted_use', label: 'การใช้ข้อมูลที่อนุญาต:', type: 'textarea', required: true },
+                { id: 'penalty', label: 'บทลงโทษกรณีฝ่าฝืน:', type: 'textarea', required: false }
+            ]
+        },
+        'franchise': {
+            title: 'สัญญาแฟรนไชส์',
+            desc: 'สัญญาสำหรับการให้สิทธิ์ดำเนินธุรกิจภายใต้แบรนด์ ระบุค่าแฟรนไชส์และเงื่อนไข',
+            icon: 'fa-store',
+            fields: [
+                { id: 'franchise_brand', label: 'ชื่อแบรนด์แฟรนไชส์:', type: 'text', required: true },
+                { id: 'franchise_fee', label: 'ค่าแฟรนไชส์:', type: 'number', required: true },
+                { id: 'royalty_fee', label: 'ค่าลิขสิทธิ์ (% จากยอดขาย):', type: 'number', step: '0.01', required: true },
+                { id: 'franchise_period', label: 'ระยะเวลาสัญญา:', type: 'text', required: true },
+                { id: 'territory', label: 'พื้นที่ดำเนินการ:', type: 'textarea', required: true },
+                { id: 'support_training', label: 'การสนับสนุนและฝึกอบรม:', type: 'textarea', required: false }
+            ]
+        },
+        'distribution': {
+            title: 'สัญญาตัวแทนจำหน่าย',
+            desc: 'สัญญาสำหรับการเป็นตัวแทนจำหน่ายสินค้า ระบุพื้นที่ เป้ายอดขาย และค่าตอบแทน',
+            icon: 'fa-truck',
+            fields: [
+                { id: 'products_distributed', label: 'สินค้าที่จำหน่าย:', type: 'textarea', required: true },
+                { id: 'distribution_area', label: 'พื้นที่จำหน่าย:', type: 'textarea', required: true },
+                { id: 'sales_target', label: 'เป้ายอดขาย:', type: 'number', required: true },
+                { id: 'commission_rate', label: 'อัตราค่าคอมมิชชั่น (%):', type: 'number', step: '0.01', required: true },
+                { id: 'distribution_period', label: 'ระยะเวลาสัญญา:', type: 'text', required: true }
+            ]
+        },
+        'construction': {
+            title: 'สัญญาก่อสร้าง',
+            desc: 'สัญญาสำหรับงานก่อสร้าง ระบุขอบเขตงาน ค่าก่อสร้าง และระยะเวลาแล้วเสร็จ',
+            icon: 'fa-hard-hat',
+            fields: [
+                { id: 'project_name', label: 'ชื่อโครงการ:', type: 'text', required: true },
+                { id: 'construction_scope', label: 'ขอบเขตงานก่อสร้าง:', type: 'textarea', required: true },
+                { id: 'construction_cost', label: 'ค่าก่อสร้าง:', type: 'number', required: true },
+                { id: 'completion_date', label: 'กำหนดแล้วเสร็จ:', type: 'date', required: true },
+                { id: 'payment_schedule', label: 'ตารางการชำระเงิน:', type: 'textarea', required: true },
+                { id: 'warranty_period', label: 'ระยะเวลาการรับประกัน:', type: 'text', required: false }
+            ]
+        },
+        'consulting': {
+            title: 'สัญญาที่ปรึกษา',
+            desc: 'สัญญาสำหรับการให้คำปรึกษา ระบุขอบเขตงาน ค่าตอบแทน และระยะเวลา',
+            icon: 'fa-user-tie',
+            fields: [
+                { id: 'consulting_area', label: 'สาขาการให้คำปรึกษา:', type: 'text', required: true },
+                { id: 'consulting_scope', label: 'ขอบเขตงาน:', type: 'textarea', required: true },
+                { id: 'consulting_fee', label: 'ค่าตอบแทน:', type: 'number', required: true },
+                { id: 'consulting_period', label: 'ระยะเวลาให้คำปรึกษา:', type: 'text', required: true },
+                { id: 'deliverables', label: 'ผลงานที่ส่งมอบ:', type: 'textarea', required: false }
+            ]
+        },
+        'license': {
+            title: 'สัญญาอนุญาตใช้สิทธิ์',
+            desc: 'สัญญาสำหรับการอนุญาตให้ใช้ทรัพย์สินทางปัญญา ระบุขอบเขตการใช้และค่าตอบแทน',
+            icon: 'fa-certificate',
+            fields: [
+                { id: 'licensed_property', label: 'ทรัพย์สินที่อนุญาตให้ใช้:', type: 'textarea', required: true },
+                { id: 'license_scope', label: 'ขอบเขตการใช้สิทธิ์:', type: 'textarea', required: true },
+                { id: 'license_fee', label: 'ค่าลิขสิทธิ์:', type: 'number', required: true },
+                { id: 'license_period', label: 'ระยะเวลาอนุญาต:', type: 'text', required: true },
+                { id: 'restrictions', label: 'ข้อจำกัดในการใช้:', type: 'textarea', required: false }
+            ]
+        },
+        'agency': {
+            title: 'สัญญาตัวแทน',
+            desc: 'สัญญาสำหรับการเป็นตัวแทนในการดำเนินการ ระบุอำนาจหน้าที่และค่าตอบแทน',
+            icon: 'fa-id-card',
+            fields: [
+                { id: 'agency_purpose', label: 'วัตถุประสงค์การเป็นตัวแทน:', type: 'textarea', required: true },
+                { id: 'agency_authority', label: 'อำนาจของตัวแทน:', type: 'textarea', required: true },
+                { id: 'agency_fee', label: 'ค่าตอบแทนตัวแทน:', type: 'number', required: true },
+                { id: 'agency_period', label: 'ระยะเวลาเป็นตัวแทน:', type: 'text', required: true },
+                { id: 'agency_limitations', label: 'ข้อจำกัดของตัวแทน:', type: 'textarea', required: false }
+            ]
+        },
+        'mortgage': {
+            title: 'สัญญาจำนอง',
+            desc: 'สัญญาสำหรับการจำนองทรัพย์สิน ระบุทรัพย์สินที่จำนอง วงเงิน และระยะเวลา',
+            icon: 'fa-key',
+            fields: [
+                { id: 'mortgaged_property', label: 'ทรัพย์สินที่จำนอง:', type: 'textarea', required: true },
+                { id: 'mortgage_amount', label: 'วงเงินจำนอง:', type: 'number', required: true },
+                { id: 'mortgage_interest', label: 'อัตราดอกเบี้ย (% ต่อปี):', type: 'number', step: '0.01', required: true },
+                { id: 'mortgage_period', label: 'ระยะเวลาจำนอง:', type: 'text', required: true },
+                { id: 'mortgage_terms', label: 'เงื่อนไขการจำนอง:', type: 'textarea', required: true }
+            ]
+        },
+        'pledge': {
+            title: 'สัญญาจำนำ',
+            desc: 'สัญญาสำหรับการจำนำทรัพย์สินเคลื่อนที่ ระบุทรัพย์สินที่จำนำและเงื่อนไข',
+            icon: 'fa-coins',
+            fields: [
+                { id: 'pledged_items', label: 'ทรัพย์สินที่จำนำ:', type: 'textarea', required: true },
+                { id: 'pledge_amount', label: 'จำนวนเงิน:', type: 'number', required: true },
+                { id: 'pledge_interest', label: 'อัตราดอกเบี้ย (% ต่อเดือน):', type: 'number', step: '0.01', required: true },
+                { id: 'pledge_period', label: 'ระยะเวลาจำนำ:', type: 'text', required: true },
+                { id: 'redemption_terms', label: 'เงื่อนไขการไถ่ถอน:', type: 'textarea', required: false }
+            ]
+        },
+        'insurance': {
+            title: 'สัญญาประกันภัย',
+            desc: 'สัญญาสำหรับการทำประกันภัย ระบุความคุ้มครอง เบี้ยประกัน และเงื่อนไข',
+            icon: 'fa-shield-alt',
+            fields: [
+                { id: 'insurance_type', label: 'ประเภทประกันภัย:', type: 'text', required: true },
+                { id: 'coverage_amount', label: 'จำนวนเงินคุ้มครอง:', type: 'number', required: true },
+                { id: 'premium', label: 'เบี้ยประกันภัย:', type: 'number', required: true },
+                { id: 'coverage_period', label: 'ระยะเวลาคุ้มครอง:', type: 'text', required: true },
+                { id: 'coverage_details', label: 'รายละเอียดความคุ้มครอง:', type: 'textarea', required: true },
+                { id: 'exclusions', label: 'ข้อยกเว้น:', type: 'textarea', required: false }
+            ]
+        },
+        'transport': {
+            title: 'สัญญาขนส่ง',
+            desc: 'สัญญาสำหรับการขนส่งสินค้า ระบุเส้นทาง ค่าขนส่ง และความรับผิดชอบ',
+            icon: 'fa-shipping-fast',
+            fields: [
+                { id: 'cargo_details', label: 'รายละเอียดสินค้า:', type: 'textarea', required: true },
+                { id: 'origin_destination', label: 'ต้นทาง-ปลายทาง:', type: 'text', required: true },
+                { id: 'transport_fee', label: 'ค่าขนส่ง:', type: 'number', required: true },
+                { id: 'delivery_date', label: 'กำหนดส่งมอบ:', type: 'date', required: true },
+                { id: 'liability_terms', label: 'เงื่อนไขความรับผิดชอบ:', type: 'textarea', required: true }
+            ]
+        },
+        'warehouse': {
+            title: 'สัญญาเก็บสินค้า',
+            desc: 'สัญญาสำหรับการเก็บรักษาสินค้าในคลังสินค้า ระบุค่าเก็บและความรับผิดชอบ',
+            icon: 'fa-warehouse',
+            fields: [
+                { id: 'stored_goods', label: 'สินค้าที่เก็บรักษา:', type: 'textarea', required: true },
+                { id: 'storage_area', label: 'พื้นที่จัดเก็บ:', type: 'text', required: true },
+                { id: 'storage_fee', label: 'ค่าเก็บรักษา (ต่อเดือน):', type: 'number', required: true },
+                { id: 'storage_period', label: 'ระยะเวลาเก็บรักษา:', type: 'text', required: true },
+                { id: 'storage_conditions', label: 'เงื่อนไขการเก็บรักษา:', type: 'textarea', required: false }
+            ]
+        },
+        'factoring': {
+            title: 'สัญญาแฟคตอริ่ง',
+            desc: 'สัญญาสำหรับการซื้อลูกหนี้การค้า ระบุมูลค่าลูกหนี้และค่าธรรมเนียม',
+            icon: 'fa-file-invoice-dollar',
+            fields: [
+                { id: 'receivables_amount', label: 'มูลค่าลูกหนี้:', type: 'number', required: true },
+                { id: 'advance_rate', label: 'อัตราการจ่ายล่วงหน้า (%):', type: 'number', step: '0.01', required: true },
+                { id: 'factoring_fee', label: 'ค่าธรรมเนียม (%):', type: 'number', step: '0.01', required: true },
+                { id: 'debtor_details', label: 'รายละเอียดลูกหนี้:', type: 'textarea', required: true },
+                { id: 'factoring_terms', label: 'เงื่อนไขเพิ่มเติม:', type: 'textarea', required: false }
+            ]
+        },
+        'guarantee': {
+            title: 'สัญญาค้ำประกัน',
+            desc: 'สัญญาสำหรับการค้ำประกันหนี้ ระบุรายละเอียดหนี้ที่ค้ำประกัน วงเงิน และระยะเวลา',
+            icon: 'fa-hands-helping',
+            fields: [
+                { id: 'guaranteed_debt', label: 'หนี้ที่ค้ำประกัน:', type: 'textarea', required: true },
+                { id: 'guarantee_amount', label: 'วงเงินค้ำประกัน:', type: 'number', required: true },
+                { id: 'guarantee_period', label: 'ระยะเวลาค้ำประกัน:', type: 'text', required: true },
+                { id: 'guarantor_details', label: 'รายละเอียดผู้ค้ำประกัน:', type: 'textarea', required: true },
+                { id: 'guarantee_terms', label: 'เงื่อนไขการค้ำประกัน:', type: 'textarea', required: true }
+            ]
+        },
+        'investment': {
+            title: 'สัญญาการลงทุน',
+            desc: 'สัญญาสำหรับการลงทุนในธุรกิจ ระบุจำนวนเงินลงทุน สัดส่วนหุ้น และสิทธิ์ของผู้ลงทุน',
+            icon: 'fa-chart-line',
+            fields: [
+                { id: 'investment_amount', label: 'จำนวนเงินลงทุน:', type: 'number', required: true },
+                { id: 'equity_percentage', label: 'สัดส่วนหุ้น (%):', type: 'number', step: '0.01', required: true },
+                { id: 'investment_purpose', label: 'วัตถุประสงค์การลงทุน:', type: 'textarea', required: true },
+                { id: 'investor_rights', label: 'สิทธิ์ของผู้ลงทุน:', type: 'textarea', required: true },
+                { id: 'exit_strategy', label: 'กลยุทธ์การออกจากการลงทุน:', type: 'textarea', required: false }
+            ]
+        },
+        'credit_line': {
+            title: 'สัญญาเปิดเครดิตไลน์',
+            desc: 'สัญญาสำหรับการเปิดวงเงินสินเชื่อ ระบุวงเงิน ระยะเวลา และอัตราดอกเบี้ย',
+            icon: 'fa-credit-card',
+            fields: [
+                { id: 'credit_limit', label: 'วงเงินสินเชื่อ:', type: 'number', required: true },
+                { id: 'credit_period', label: 'ระยะเวลา (ปี):', type: 'number', required: true },
+                { id: 'credit_interest', label: 'อัตราดอกเบี้ย (% ต่อปี):', type: 'number', step: '0.01', required: true },
+                { id: 'credit_fee', label: 'ค่าธรรมเนียม:', type: 'number', required: true },
+                { id: 'credit_terms', label: 'เงื่อนไขการใช้เงิน:', type: 'textarea', required: true }
+            ]
+        },
+        'supplier': {
+            title: 'สัญญาซัพพลายเออร์',
+            desc: 'สัญญาสำหรับการเป็นซัพพลายเออร์ ระบุสินค้าที่จัดหา ราคา และเงื่อนไขการส่งมอบ',
+            icon: 'fa-boxes',
+            fields: [
+                { id: 'supplied_products', label: 'สินค้าที่จัดหา:', type: 'textarea', required: true },
+                { id: 'unit_price', label: 'ราคาต่อหน่วย:', type: 'number', required: true },
+                { id: 'minimum_order', label: 'ปริมาณขั้นต่ำ:', type: 'number', required: true },
+                { id: 'delivery_schedule', label: 'กำหนดการส่งมอบ:', type: 'text', required: true },
+                { id: 'payment_terms', label: 'เงื่อนไขการชำระเงิน:', type: 'textarea', required: true },
+                { id: 'quality_standards', label: 'มาตรฐานคุณภาพ:', type: 'textarea', required: false }
+            ]
+        },
+        'joint_venture': {
+            title: 'สัญญาร่วมทุน (Joint Venture)',
+            desc: 'สัญญาสำหรับการร่วมทุนในโครงการ ระบุสัดส่วนการลงทุน การแบ่งกำไร และความรับผิดชอบ',
+            icon: 'fa-handshake',
+            fields: [
+                { id: 'project_name', label: 'ชื่อโครงการ:', type: 'text', required: true },
+                { id: 'investment_ratio', label: 'สัดส่วนการลงทุน:', type: 'text', required: true },
+                { id: 'total_investment', label: 'เงินลงทุนรวม:', type: 'number', required: true },
+                { id: 'profit_loss_sharing', label: 'การแบ่งกำไร-ขาดทุน:', type: 'textarea', required: true },
+                { id: 'management_structure', label: 'โครงสร้างการบริหาร:', type: 'textarea', required: true },
+                { id: 'project_duration', label: 'ระยะเวลาโครงการ:', type: 'text', required: true }
+            ]
+        },
+        'maintenance': {
+            title: 'สัญญาบำรุงรักษา',
+            desc: 'สัญญาสำหรับการบำรุงรักษาอุปกรณ์หรือระบบ ระบุขอบเขตงาน ค่าบริการ และความถี่',
+            icon: 'fa-tools',
+            fields: [
+                { id: 'equipment_details', label: 'รายละเอียดอุปกรณ์:', type: 'textarea', required: true },
+                { id: 'maintenance_scope', label: 'ขอบเขตการบำรุงรักษา:', type: 'textarea', required: true },
+                { id: 'maintenance_fee', label: 'ค่าบำรุงรักษา (ต่อปี):', type: 'number', required: true },
+                { id: 'maintenance_frequency', label: 'ความถี่ในการบำรุงรักษา:', type: 'text', required: true },
+                { id: 'response_time', label: 'ระยะเวลาตอบสนอง:', type: 'text', required: true },
+                { id: 'spare_parts', label: 'การจัดหาอะไหล่:', type: 'textarea', required: false }
+            ]
+        },
+        'software_license': {
+            title: 'สัญญาใบอนุญาตซอฟต์แวร์',
+            desc: 'สัญญาสำหรับการใช้งานซอฟต์แวร์ ระบุจำนวนผู้ใช้ ระยะเวลา และค่าบริการ',
+            icon: 'fa-laptop-code',
+            fields: [
+                { id: 'software_name', label: 'ชื่อซอฟต์แวร์:', type: 'text', required: true },
+                { id: 'license_type', label: 'ประเภทใบอนุญาต:', type: 'text', required: true },
+                { id: 'user_count', label: 'จำนวนผู้ใช้งาน:', type: 'number', required: true },
+                { id: 'license_fee', label: 'ค่าใบอนุญาต (ต่อปี):', type: 'number', required: true },
+                { id: 'support_included', label: 'การสนับสนุนที่รวมอยู่:', type: 'textarea', required: false },
+                { id: 'renewal_terms', label: 'เงื่อนไขการต่ออายุ:', type: 'textarea', required: false }
+            ]
+        },
+        'trademark': {
+            title: 'สัญญาโอนเครื่องหมายการค้า',
+            desc: 'สัญญาสำหรับการโอนเครื่องหมายการค้า ระบุเครื่องหมายที่โอน ราคา และเงื่อนไข',
+            icon: 'fa-trademark',
+            fields: [
+                { id: 'trademark_details', label: 'รายละเอียดเครื่องหมายการค้า:', type: 'textarea', required: true },
+                { id: 'registration_number', label: 'เลขที่จดทะเบียน:', type: 'text', required: true },
+                { id: 'transfer_price', label: 'ราคาโอน:', type: 'number', required: true },
+                { id: 'product_categories', label: 'หมวดหมู่สินค้า/บริการ:', type: 'textarea', required: true },
+                { id: 'goodwill_included', label: 'การโอนชื่อเสียง:', type: 'textarea', required: false }
+            ]
+        },
+        'export_import': {
+            title: 'สัญญานำเข้า-ส่งออก',
+            desc: 'สัญญาสำหรับการซื้อขายระหว่างประเทศ ระบุสินค้า ราคา และเงื่อนไข Incoterms',
+            icon: 'fa-globe',
+            fields: [
+                { id: 'goods_description', label: 'รายละเอียดสินค้า:', type: 'textarea', required: true },
+                { id: 'quantity', label: 'ปริมาณ:', type: 'text', required: true },
+                { id: 'unit_price', label: 'ราคาต่อหน่วย (USD):', type: 'number', required: true },
+                { id: 'incoterms', label: 'เงื่อนไข Incoterms:', type: 'text', required: true },
+                { id: 'shipping_date', label: 'กำหนดส่งสินค้า:', type: 'date', required: true },
+                { id: 'payment_method', label: 'วิธีการชำระเงิน:', type: 'textarea', required: true },
+                { id: 'inspection_terms', label: 'เงื่อนไขการตรวจสอบ:', type: 'textarea', required: false }
+            ]
+        }
+    };
+
+    let userInfo = {};
+    let contractInfo = {};
+    let isSubmitting = false;
+
+    const chatContainer = document.getElementById('chatContainer');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const clearChatButton = document.getElementById('clearChat');
+    const infoButton = document.getElementById('infoButton');
+    const contactButton = document.getElementById('contactButton');
+    const documentButton = document.getElementById('documentButton');
+    const generateDocButton = document.getElementById('generateDocButton');
+    const attachButton = document.getElementById('attachButton');
+    const micButton = document.getElementById('micButton');
+    const copyButton = document.getElementById('copyButton');
+    const pasteButton = document.getElementById('pasteButton');
+    const fileInput = document.getElementById('fileInput');
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const infoModal = document.getElementById('infoModal');
+    const contactModal = document.getElementById('contactModal');
+    const documentModal = document.getElementById('documentModal');
+    const contractFormModal = document.getElementById('contractFormModal');
+    const docModal = document.getElementById('docModal');
+
+    const closeInfoModal = document.getElementById('closeInfoModal');
+    const closeContactModal = document.getElementById('closeContactModal');
+    const closeDocumentModal = document.getElementById('closeDocumentModal');
+    const backContractFormModal = document.getElementById('backContractFormModal');
+    const closeDocModal = document.getElementById('closeDocModal');
+
+    const infoForm = document.getElementById('infoForm');
+    const contactForm = document.getElementById('contactForm');
+    const contractForm = document.getElementById('contractForm');
+    const contractFormTitle = document.getElementById('contractFormTitle');
+    const contractFormFields = document.getElementById('contractFormFields');
+    const docGrid = document.getElementById('docGrid');
+
+    const generateImageButton = document.getElementById('generateImageButton');
+    const imagePrompt = document.getElementById('imagePrompt');
+
+    // สร้าง HTML สำหรับ document grid
+    function renderDocumentGrid() {
+        docGrid.innerHTML = '';
+        
+        for (const [key, contract] of Object.entries(CONTRACTS_DATA)) {
+            const docItem = document.createElement('div');
+            docItem.className = 'doc-item';
+            docItem.setAttribute('data-contract', key);
+            
+            const icon = contract.icon || 'fa-file-contract';
+            
+            docItem.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <div class="doc-item-title">${contract.title}</div>
+                <div class="doc-item-desc">${contract.desc}</div>
+            `;
+            
+            docGrid.appendChild(docItem);
+        }
+        
+        // เพิ่ม event listeners
+        attachDocumentItemListeners();
+    }
+
+    // สร้างฟอร์มจากข้อมูล fields
+    function generateFormHTML(fields) {
+        let formHTML = '';
+        
+        for (const field of fields) {
+            const required = field.required ? 'required' : '';
+            const step = field.step ? `step="${field.step}"` : '';
+            
+            formHTML += `<div class="form-group">`;
+            formHTML += `<label for="${field.id}">${field.label}</label>`;
+            
+            if (field.type === 'textarea') {
+                formHTML += `<textarea id="${field.id}" name="${field.id}" ${required}></textarea>`;
+            } else {
+                formHTML += `<input type="${field.type}" id="${field.id}" name="${field.id}" ${step} ${required}>`;
+            }
+            
+            formHTML += `</div>`;
+        }
+        
+        return formHTML;
+    }
+
+    // เพิ่ม event listeners สำหรับ document items
+    function attachDocumentItemListeners() {
+        const docItems = document.querySelectorAll('.doc-item');
+        
+        docItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const contractType = this.getAttribute('data-contract');
+                const contract = CONTRACTS_DATA[contractType];
+                
+                if (contract) {
+                    contractFormTitle.textContent = contract.title;
+                    contractFormFields.innerHTML = generateFormHTML(contract.fields);
+                    closeDocumentModalFunc();
+                    openContractFormModal();
+                }
+            });
+        });
+    }
+
+    function addMessage(text, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'avatar';
+        avatarDiv.innerHTML = isUser ? 
+            (userInfo.fullName ? userInfo.fullName.charAt(0).toUpperCase() : 'U') : 
+            '🤖';
+        
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'message-bubble';
+        bubbleDiv.innerHTML = text;
+        
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(bubbleDiv);
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message typing-indicator';
+        messageDiv.id = 'typingIndicator';
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'avatar';
+        avatarDiv.innerHTML = '🤖';
+        
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'message-bubble';
+        bubbleDiv.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+        
+        messageDiv.appendChild(avatarDiv);
+        messageDiv.appendChild(bubbleDiv);
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+
+    async function getBotResponse(message) {
+        const apiUrl = 'https://api.anthropic.com/v1/messages';
+        const apiKey = 'sk-ant-api03-BN1Rco7jMJU6p-V1LV_rBvNaODUJnhqBw4xWMzfTJNLMg3JqPQiQJdJGwvyWu_JCfX4u1RfCY5jYYKzePDNcZQ-31vxFQAA';
+
+        let systemPrompt = 'คุณคือผู้ช่วยส่วนตัวที่ชาญฉลาดและเป็นมิตร ตอบคำถามด้วยภาษาไทยที่สุภาพและชัดเจน';
+        
+        if (userInfo.fullName) {
+            systemPrompt += `\n\nข้อมูลผู้ใช้:\nชื่อ: ${userInfo.fullName}\nบัตรประชาชน: ${userInfo.idCard}\nที่อยู่: ${userInfo.address}\nเบอร์โทร: ${userInfo.phone}\nอีเมล: ${userInfo.email}`;
+        }
+        
+        if (contactInfo.contactName) {
+            systemPrompt += `\n\nข้อมูลผู้ติดต่อ:\nชื่อ: ${contactInfo.contactName}\nเบอร์โทร: ${contactInfo.contactPhone}\nอีเมล: ${contactInfo.contactEmail}\nความสัมพันธ์: ${contactInfo.contactRelation}`;
+        }
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    'anthropic-version': '2023-06-01'
+                },
+                body: JSON.stringify({
+                    model: 'claude-3-5-sonnet-20241022',
+                    max_tokens: 8096,
+                    system: systemPrompt,
+                    messages: [{
+                        role: 'user',
+                        content: message
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.content[0].text;
+        } catch (error) {
+            console.error('Error:', error);
+            return 'ขอโทษครับ เกิดข้อผิดพลาดในการเชื่อมต่อกับระบบ กรุณาลองใหม่อีกครั้ง';
+        }
+    }
+
+    async function handleSendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, true);
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+
+        addTypingIndicator();
+        const response = await getBotResponse(message);
+        removeTypingIndicator();
+        addMessage(response);
+    }
+
+    function clearChat() {
+        if (confirm('คุณต้องการล้างประวัติการสนทนาหรือไม่?')) {
+            chatContainer.innerHTML = '';
+            initChat();
+        }
+    }
+
+    function initChat() {
+        addMessage('สวัสดีครับ! ผมคือผู้ช่วยส่วนตัวของคุณ มีอะไรให้ช่วยไหมครับ?');
+    }
+
+    function openModal(modal) {
+        modalOverlay.classList.add('active');
+        modal.style.display = 'block';
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            modal.style.transform = 'scale(1)';
+        }, 10);
+    }
+
+    function closeModal(modal) {
+        modal.style.opacity = '0';
+        modal.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modalOverlay.classList.remove('active');
+        }, 300);
+    }
+
+    function openInfoModal() {
+        if (userInfo.fullName) {
+            document.getElementById('fullName').value = userInfo.fullName;
+            document.getElementById('idCard').value = userInfo.idCard;
+            document.getElementById('address').value = userInfo.address;
+            document.getElementById('phone').value = userInfo.phone;
+            document.getElementById('email').value = userInfo.email;
+        }
+        openModal(infoModal);
+    }
+
+    function closeInfoModalFunc() {
+        closeModal(infoModal);
+    }
+
+    function handleInfoFormSubmit(e) {
+        e.preventDefault();
+        userInfo = {
+            fullName: document.getElementById('fullName').value,
+            idCard: document.getElementById('idCard').value,
+            address: document.getElementById('address').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value
+        };
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        closeInfoModalFunc();
+        addMessage(`บันทึกข้อมูลส่วนตัวของคุณ${userInfo.fullName}เรียบร้อยแล้วครับ`);
+    }
+
+    function openContactModal() {
+        if (contactInfo.contactName) {
+            document.getElementById('contactName').value = contactInfo.contactName;
+            document.getElementById('contactPhone').value = contactInfo.contactPhone;
+            document.getElementById('contactEmail').value = contactInfo.contactEmail || '';
+            document.getElementById('contactRelation').value = contactInfo.contactRelation || '';
+        }
+        openModal(contactModal);
+    }
+
+    function closeContactModalFunc() {
+        closeModal(contactModal);
+    }
+
+    function handleContactFormSubmit(e) {
+        e.preventDefault();
+        contactInfo = {
+            contactName: document.getElementById('contactName').value,
+            contactPhone: document.getElementById('contactPhone').value,
+            contactEmail: document.getElementById('contactEmail').value,
+            contactRelation: document.getElementById('contactRelation').value
+        };
+        localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+        closeContactModalFunc();
+        addMessage(`บันทึกข้อมูลผู้ติดต่อ ${contactInfo.contactName} เรียบร้อยแล้วครับ`);
+    }
+
+    function openDocumentModal() {
+        openModal(documentModal);
+    }
+
+    function closeDocumentModalFunc() {
+        closeModal(documentModal);
+    }
+
+    function openContractFormModal() {
+        openModal(contractFormModal);
+    }
+
+    function backToDocumentModal() {
+        closeModal(contractFormModal);
+        setTimeout(() => openDocumentModal(), 300);
+    }
+
+    function openDocModal() {
+        openModal(docModal);
+    }
+
+    function closeDocModalFunc() {
+        closeModal(docModal);
+    }
+
+    async function handleGenerateImage() {
+        const prompt = imagePrompt.value.trim();
+        if (!prompt) {
+            alert('กรุณาระบุคำอธิบายภาพที่ต้องการ');
+            return;
+        }
+
+        closeDocModalFunc();
+        addMessage(`กำลังสร้างภาพ: ${prompt}`, true);
+        addTypingIndicator();
+
+        try {
+            const response = await fetch('https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt));
+            const imageUrl = response.url;
+            
+            removeTypingIndicator();
+            addMessage(`<img src="${imageUrl}" alt="${prompt}" style="max-width: 100%; border-radius: 0.5rem;">`);
+            imagePrompt.value = '';
+        } catch (error) {
+            removeTypingIndicator();
+            addMessage('ขอโทษครับ ไม่สามารถสร้างภาพได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง');
+        }
+    }
+
+    async function handleCopyText() {
+        try {
+            const text = await navigator.clipboard.readText();
+            messageInput.value = text;
+            addMessage('คัดลอกข้อความเรียบร้อยแล้ว');
+        } catch (err) {
+            alert('ไม่สามารถคัดลอกข้อความได้ กรุณาอนุญาตการเข้าถึงคลิปบอร์ด');
+        }
+    }
+
+    async function handlePasteText() {
+        try {
+            const text = await navigator.clipboard.readText();
+            messageInput.value += text;
+        } catch (err) {
+            alert('ไม่สามารถวางข้อความได้ กรุณาอนุญาตการเข้าถึงคลิปบอร์ด');
+        }
+    }
+
+    async function performOCR(imageUrl) {
+        addTypingIndicator();
+        try {
+            const { data: { text } } = await Tesseract.recognize(imageUrl, 'tha+eng');
+            removeTypingIndicator();
+            if (text.trim()) {
+                addMessage(`ข้อความที่พบในรูปภาพ:\n\n${text}`);
+            } else {
+                addMessage('ไม่พบข้อความในรูปภาพ');
+            }
+        } catch (error) {
+            removeTypingIndicator();
+            addMessage('ขอโทษครับ ไม่สามารถอ่านข้อความจากรูปภาพได้');
+        }
+    }
+
+    contractForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        const contractTitle = contractFormTitle.textContent;
+        const inputs = contractFormFields.querySelectorAll('input, textarea');
+        let formData = `สร้าง${contractTitle}:\n`;
+        
+        inputs.forEach(input => {
+            const label = input.previousElementSibling ? input.previousElementSibling.textContent : '';
+            const value = input.value || '........';
+            formData += `${label} ${value}\n`;
+        });
+
+        messageInput.value = formData;
+        closeModal(contractFormModal);
+        handleSendMessage();
+
+        setTimeout(() => { isSubmitting = false; }, 1000);
+    });
+
+    messageInput.addEventListener('touchstart', function(e) {
+        this.focus();
+    }, false);
+
+    attachButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const fileUrl = URL.createObjectURL(file);
+            const message = `<img src="${fileUrl}" alt="${file.name}">`;
+            addMessage(message, true);
+            performOCR(fileUrl);
+            fileInput.value = '';
+        }
+    });
+
+    micButton.addEventListener('click', () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert('เบราว์เซอร์ของคุณไม่รองรับการพิมพ์ด้วยเสียง หรือคุณกำลังใช้ iOS ซึ่งอาจมีข้อจำกัด');
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'th-TH';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.start();
+        micButton.style.color = '#ff0000';
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            messageInput.value = transcript;
+            micButton.style.color = 'var(--text-secondary)';
+            handleSendMessage();
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            alert('เกิดข้อผิดพลาดในการพิมพ์ด้วยเสียง: ' + event.error);
+            micButton.style.color = 'var(--text-secondary)';
+        };
+
+        recognition.onend = () => {
+            micButton.style.color = 'var(--text-secondary)';
+        };
+    });
+
+    infoButton.addEventListener('click', openInfoModal);
+    closeInfoModal.addEventListener('click', closeInfoModalFunc);
+    infoForm.addEventListener('submit', handleInfoFormSubmit);
+
+    contactButton.addEventListener('click', openContactModal);
+    closeContactModal.addEventListener('click', closeContactModalFunc);
+    contactForm.addEventListener('submit', handleContactFormSubmit);
+
+    documentButton.addEventListener('click', openDocumentModal);
+    closeDocumentModal.addEventListener('click', closeDocumentModalFunc);
+    backContractFormModal.addEventListener('click', backToDocumentModal);
+
+    generateDocButton.addEventListener('click', openDocModal);
+    closeDocModal.addEventListener('click', closeDocModalFunc);
+    generateImageButton.addEventListener('click', handleGenerateImage);
+
+    copyButton.addEventListener('click', handleCopyText);
+    pasteButton.addEventListener('click', handlePasteText);
+
+    sendButton.addEventListener('click', handleSendMessage);
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    });
+    clearChatButton.addEventListener('click', clearChat);
+
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeModal(infoModal);
+            closeModal(contactModal);
+            closeModal(documentModal);
+            closeModal(contractFormModal);
+            closeModal(docModal);
+        }
+    });
+
+    if (localStorage.getItem('userInfo')) {
+        userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    }
+    if (localStorage.getItem('contactInfo')) {
+        contactInfo = JSON.parse(localStorage.getItem('contactInfo'));
+    }
+
+    // เริ่มต้นระบบ
+    renderDocumentGrid();
+    initChat();
+    console.log('โหลดหน้าเว็บเรียบร้อยแล้ว - สัญญาทั้งหมด:', Object.keys(CONTRACTS_DATA).length, 'ประเภท');
+</script>
+</body>
+</html>
